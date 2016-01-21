@@ -15,7 +15,7 @@ CREATE TABLE if not exists POSTINUMERO(
 DROP TABLE IF EXISTS OSOITE;
 CREATE TABLE if not exists OSOITE(
     Id integer PRIMARY KEY ,
-    Postinumero INTEGER REFERENCES POSTINUMERO (Postinumero)
+    Postinumero CHAR(5) REFERENCES POSTINUMERO (Postinumero)
             ON DELETE RESTRICT
             ON UPDATE CASCADE,
     Postiosoite varchar(100) CHECK(length(Postiosoite)>0)
