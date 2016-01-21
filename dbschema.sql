@@ -1,12 +1,12 @@
 DROP TABLE IF EXISTS POSTITOIMIPAIKKA;
 CREATE TABLE if not exists POSTITOIMIPAIKKA(
     Id SERIAL NOT NULL PRIMARY KEY,
-    Postitoimipaikka VARCHAR(30)
+    Postitoimipaikka VARCHAR(30) CHECK(length(Postitoimipaikka)>0)
 );
 
 DROP TABLE IF EXISTS POSTINUMERO;
 CREATE TABLE if not exists POSTINUMERO(
-    Postinumero INTEGER NOT NULL PRIMARY KEY,
+    Postinumero CHAR(5) NOT NULL PRIMARY KEY CHECK(Postinumero SIMILAR TO '^[0-9]{5}'),
     Postitoimipaikka INTEGER REFERENCES POSTITOIMIPAIKKA (Id)
             ON DELETE RESTRICT
             ON UPDATE CASCADE
@@ -15,10 +15,10 @@ CREATE TABLE if not exists POSTINUMERO(
 DROP TABLE IF EXISTS OSOITE;
 CREATE TABLE if not exists OSOITE(
     Id integer PRIMARY KEY ,
-    Postinumero INTEGER REFERENCES POSTINUMERO (Postinumero)
+    Postinumero CHAR(5) REFERENCES POSTINUMERO (Postinumero)
             ON DELETE RESTRICT
             ON UPDATE CASCADE,
-    Postiosoite varchar(100)
+    Postiosoite varchar(100) CHECK(length(Postiosoite)>0)
 );
 
 DROP TABLE IF EXISTS TAPAHTUMANJARJESTAJA;
@@ -76,13 +76,14 @@ CREATE TABLE if not exists TAPAHTUMANJARJESTAJA(
     Nimi varchar(60)
 );
 
+
 DROP TABLE IF EXISTS SIHTEERI;
 CREATE TABLE if not exists SIHTEERI(
     Tunnus varchar(20) NOT NULL PRIMARY KEY CHECK(length(Tunnus)>7),
-    Salasana varchar(60),
-    Nimi varchar(201),
-    Puhelin varchar(12),
-    Email varchar(60),
+    Salasana varchar(60) NOT NULL CHECK(length(Salasana)>7),
+    Nimi varchar(201) NOT NULL CHECK(length(Nimi)>0),
+    Puhelin varchar(12) NOT NULL CHECK(length(Puhelin)>0),
+    Email varchar(60) NOT NULL CHECK(length(Email)>0),
     Osoite INTEGER REFERENCES Osoite (Id)
           ON DELETE RESTRICT
           ON UPDATE RESTRICT
@@ -91,10 +92,10 @@ CREATE TABLE if not exists SIHTEERI(
 DROP TABLE IF EXISTS VASTUUHENKILO;
 CREATE TABLE if not exists VASTUUHENKILO(
     Tunnus varchar(20) NOT NULL primary key CHECK(length(Tunnus)>7),
-    Salasana varchar(60),
-    Nimi varchar(201),
-    Puhelin varchar(12),
-    Email varchar(60),
+    Salasana varchar(60) NOT NULL CHECK(length(Salasana)>7),
+    Nimi varchar(201) NOT NULL CHECK(length(Nimi)>0),
+    Puhelin varchar(12) NOT NULL CHECK(length(Puhelin)>0),
+    Email varchar(60) NOT NULL CHECK(length(Email)>0),
     Osoite INTEGER REFERENCES Osoite(Id)
             ON DELETE RESTRICT
             ON UPDATE RESTRICT,
@@ -105,9 +106,6 @@ CREATE TABLE if not exists VASTUUHENKILO(
             ON DELETE SET NULL
             ON UPDATE CASCADE
 );
-
-
-
 
 DROP TABLE IF EXISTS SIHTEERIJARJESTAJA;
 CREATE TABLE IF NOT EXISTS SIHTEERIJARJESTAJA(
@@ -151,11 +149,11 @@ CREATE TABLE if not exists KATSOMOPAIKKA(
 DROP TABLE IF EXISTS TAPAHTUMA;
 CREATE TABLE IF NOT EXISTS TAPAHTUMA(
     Id SERIAL NOT NULL PRIMARY KEY ,
-    Nimi VARCHAR(50),
+    Nimi VARCHAR(50) CHECK(length(Nimi)>0),
     Kategoria INTEGER REFERENCES KATEGORIA(Id),
-    Alv INTEGER,
-    Alkuaika VARCHAR(100),
-    Loppuaika VARCHAR(100),
+    Alv INTEGER CHECK(Alv>=1 AND Alv<100),
+    Alkuaika TIMESTAMP,
+    Loppuaika TIMESTAMP,
     Osoiteid INTEGER REFERENCES OSOITE(Id)
             ON DELETE RESTRICT
             ON UPDATE RESTRICT,
@@ -167,7 +165,7 @@ CREATE TABLE IF NOT EXISTS TAPAHTUMA(
 DROP TABLE IF EXISTS LIPPU;
 CREATE TABLE if not exists LIPPU(
   Numero INTEGER NOT NULL PRIMARY KEY,
-  Hinta varchar(20),
+  Hinta DECIMAL NOT NULL CHECK(Hinta>0),
   Tyyppi integer REFERENCES Tyyppi(Id)
     ON DELETE SET NULL
     ON UPDATE CASCADE,
@@ -197,7 +195,7 @@ CREATE TABLE if not exists TAPAHTUMAKATSOMO(
 DROP TABLE IF EXISTS HINTATARJOUS;
 CREATE TABLE if not exists HINTATARJOUS(
   Id SERIAL NOT NULL PRIMARY KEY ,
-  Hinta varchar(20)
+  Hinta DECIMAL NOT NULL CHECK(Hinta>0)
 );
 
 DROP TABLE IF EXISTS HINTATARJOUSLIPPU;
