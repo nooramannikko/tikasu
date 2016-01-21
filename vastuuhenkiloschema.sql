@@ -1,3 +1,5 @@
+REVOKE CONNECT ON DATABASE LippuLasse FROM PUBLIC;
+
 CREATE SCHEMA vastuuhenkilo_rajattu;
 CREATE ROLE vastuuhenkilo LOGIN PASSWORD 'Salasana123';
 GRANT CONNECT ON DATABASE LippuLasse TO vastuuhenkilo;
