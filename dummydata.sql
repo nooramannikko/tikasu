@@ -21,9 +21,9 @@ INSERT INTO SIHTEERIJARJESTAJA VALUES('sihteeri', '4610760-4');
 INSERT INTO VASTUUHENKILO VALUES('laarniotar', 'laarnionsana', 'Vastuu Henkilo', '04011122244', 'vastuu@henkilo.fi', 2, '8736412-1', 'sihteeri');
 INSERT INTO VASTUUHENKILO VALUES('lasselaarnio', 'lassensana', 'Lasse Laarnio', '0501325355', 'lasse@laarnio.fi', 3, '4610760-4', 'sihteeri');
 
-INSERT INTO KATEGORIA VALUES(1, 'konsertti');
-INSERT INTO KATEGORIA VALUES(2, 'tanssi');
-INSERT INTO KATEGORIA VALUES(3, 'titesexboys');
+INSERT INTO KATEGORIA VALUES(2, 'konsertti');
+INSERT INTO KATEGORIA VALUES(3, 'tanssi');
+INSERT INTO KATEGORIA VALUES(4, 'titesexboys');
 
 -- Tapahtuma
 INSERT INTO TAPAHTUMA VALUES(1, 'Laarnio konsertti', 3, 24,  '2016-02-15 10:23:06', '2016-02-15 13:23:06', 2, 'laarniotar');
@@ -57,7 +57,7 @@ INSERT INTO TYYPPI VALUES(3, 'elakelainen');
 
 -- Liput
 -- lipun numero, hinta, tyyppi, tarkastettu, tila, tapahtuma, katsomopaikka
-INSERT INTO LIPPU VALUES(1234, 20, 1, 0, 1, 1, 5);
-INSERT INTO LIPPU VALUES(5156, 20, 1, 0, 2, 1, 6);
-INSERT INTO LIPPU VALUES(1335, 50, 2, 1, 2, 2, 1);
-INSERT INTO LIPPU VALUES(1337, 25, 3, 0, 1, 2, 2);
+INSERT INTO LIPPU VALUES(1234, 20, 1, false, 1, 1, 5);
+INSERT INTO LIPPU VALUES(5156, 20, 1, false, 2, 1, 6);
+INSERT INTO LIPPU VALUES(1335, 50, 2, true, 2, 2, 1);
+INSERT INTO LIPPU VALUES(1337, 25, 3, false, 1, 2, 2);
