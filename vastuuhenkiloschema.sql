@@ -14,8 +14,8 @@ SELECT
 	AVG(LIPPU.HINTA) AS VerotonKeskihinta,
 	COUNT(LIPPU) AS Yleisomaara,
 	SUM(LIPPU.HINTA) AS MyyntiVeroton,
-	(TAPAHTUMA.Alv::float / 100::float) * SUM(LIPPU.HINTA)::float) AS ALVOsuus,
-	(1 + (TAPAHTUMA.Alv::float / 100::float)) * SUM(LIPPU.HINTA))::float AS MyyntiVerollinen 
+	(TAPAHTUMA.Alv::float / 100::float) * (SUM(LIPPU.HINTA)::float) AS ALVOsuus,
+	(1 + (TAPAHTUMA.Alv::float / 100::float)) * (SUM(LIPPU.HINTA)::float) AS MyyntiVerollinen 
 FROM TAPAHTUMA
 	LEFT OUTER JOIN LIPPU ON (
 		TAPAHTUMA.Id = LIPPU.Tapahtuma AND
