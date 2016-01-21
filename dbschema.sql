@@ -12,3 +12,63 @@ CREATE TABLE if not exists VASTUUHENKILO(
 CREATE TABLE if not exists TAPAHTUMANJARJESTAJA(
 
 );
+
+CREATE TABLE if not exists LIPPU(
+  Numero integer NOT NULL PRIMARY KEY,
+  Hinta varchar(20),
+  Tyyppi integer REFERENCES Tyyppi(Id)
+    ON DELETE SET NULL
+    ON UPDATE CASCADE,
+  Tarkistettu boolean NOT NULL,
+  Tila integer NOT NULL,
+  Tapahtuma integer REFERENCES Tapahtuma(Id)
+    ON DELETE RESTRICT
+    ON UPDATE CASCADE,
+  Katsomopaikka integer REFERENCES Katsomopaikka(Id)
+    ON DELETE RESTRICT
+    ON UPDATE CASCADE
+);
+
+CREATE TABLE if not exists TYYPPI(
+  Id integer NOT NULL PRIMARY KEY,
+  Nimi varchar(20)
+);
+
+CREATE TABLE if not exists TAPAHTUMAKATSOMO(
+  TapahtumaId integer NOT NULL REFERENCES Tapahtuma(Id)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE,
+  KatsomoId integer NOT NULLE REFERENCES Katsomo(Id)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE,
+  PRIMARY KEY(TapahtumaId, KatsomoId)
+);
+
+CREATE TABLE if not exists KATSOMO(
+  Id integer NOT NULL PRIMARY KEY,
+  Nimi varchar(20)
+);
+
+CREATE TABLE if not exists KATSOMOPAIKKA(
+  Id integer NOT NULL PRIMARY KEY,
+  Rivi integer NOT NULL,
+  Paikka integer NOT NULL,
+  Katsomo integer NOT NULL REFERENCES Katsomo(Id)
+    ON DELETE RESTRICT
+    ON UPDATE CASCADE
+);
+
+CRETE TABLE if not exists HINTATARJOUS(
+  Id integer NOT NULL PRIMARY KEY,
+  Hinta varchar(20)
+);
+
+CREATE TABLE if not exists HINTATARJOUSLIPPU(
+  LippuId integer NOT NULL REFERENCES Lippu(Numero)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE,
+  TarjousId integer NOT NULL REFERENCES Hintatarjous(Id)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE,
+  PRIMARY KEY(LippuId, TarjousId)
+);
