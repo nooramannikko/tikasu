@@ -1,12 +1,12 @@
 DROP TABLE IF EXISTS POSTITOIMIPAIKKA;
 CREATE TABLE if not exists POSTITOIMIPAIKKA(
     Id SERIAL NOT NULL PRIMARY KEY,
-    Postitoimipaikka VARCHAR(30)
+    Postitoimipaikka VARCHAR(30) CHECK(length(Postitoimipaikka)>0)
 );
 
 DROP TABLE IF EXISTS POSTINUMERO;
 CREATE TABLE if not exists POSTINUMERO(
-    Postinumero INTEGER NOT NULL PRIMARY KEY,
+    Postinumero CHAR(5) NOT NULL PRIMARY KEY CHECK(ISNUMERIC(Postinumero)),
     Postitoimipaikka INTEGER REFERENCES POSTITOIMIPAIKKA (Id)
             ON DELETE RESTRICT
             ON UPDATE CASCADE
@@ -18,7 +18,7 @@ CREATE TABLE if not exists OSOITE(
     Postinumero INTEGER REFERENCES POSTINUMERO (Postinumero)
             ON DELETE RESTRICT
             ON UPDATE CASCADE,
-    Postiosoite varchar(100)
+    Postiosoite varchar(100) CHECK(length(Postiosoite)>0)
 );
 
 DROP TABLE IF EXISTS TAPAHTUMANJARJESTAJA;
