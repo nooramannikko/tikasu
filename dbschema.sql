@@ -62,7 +62,7 @@ CREATE TABLE if not exists LIPPU(
 );
 
 CREATE TABLE if not exists TYYPPI(
-  Id integer NOT NULL PRIMARY KEY,
+  Id integer NOT NULL PRIMARY KEY AUTOINCREMENT,
   Nimi varchar(20)
 );
 
@@ -77,12 +77,12 @@ CREATE TABLE if not exists TAPAHTUMAKATSOMO(
 );
 
 CREATE TABLE if not exists KATSOMO(
-  Id integer NOT NULL PRIMARY KEY,
+  Id integer NOT NULL PRIMARY KEY AUTOINCREMENT,
   Nimi varchar(20)
 );
 
 CREATE TABLE if not exists KATSOMOPAIKKA(
-  Id integer NOT NULL PRIMARY KEY,
+  Id integer NOT NULL PRIMARY KEY AUTOINCREMENT,
   Rivi integer NOT NULL,
   Paikka integer NOT NULL,
   Katsomo integer NOT NULL REFERENCES Katsomo(Id)
@@ -91,15 +91,15 @@ CREATE TABLE if not exists KATSOMOPAIKKA(
 );
 
 CREATE TABLE if not exists HINTATARJOUS(
-  Id integer NOT NULL PRIMARY KEY,
+  Id integer NOT NULL PRIMARY KEY AUTOINCREMENT,
   Hinta varchar(20)
 );
 
 CREATE TABLE if not exists HINTATARJOUSLIPPU(
-  LippuId integer NOT NULL REFERENCES Lippu(Numero)
+  LippuId INTEGER NOT NULL REFERENCES Lippu(Numero)
     ON DELETE CASCADE
     ON UPDATE CASCADE,
-  TarjousId integer NOT NULL REFERENCES Hintatarjous(Id)
+  TarjousId INTEGER NOT NULL REFERENCES Hintatarjous(Id)
     ON DELETE CASCADE
     ON UPDATE CASCADE,
   PRIMARY KEY(LippuId, TarjousId)
