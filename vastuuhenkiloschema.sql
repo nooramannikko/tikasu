@@ -1,8 +1,8 @@
-REVOKE CONNECT ON DATABASE LippuLasse FROM PUBLIC;
+REVOKE CONNECT ON DATABASE "LippuLasse" FROM PUBLIC;
 
 CREATE SCHEMA vastuuhenkilo_rajattu;
 CREATE ROLE vastuuhenkilo LOGIN PASSWORD 'Salasana123';
-GRANT CONNECT ON DATABASE LippuLasse TO vastuuhenkilo;
+GRANT CONNECT ON DATABASE "LippuLasse" TO vastuuhenkilo;
 GRANT USAGE ON SCHEMA vastuuhenkilo_rajattu TO vastuuhenkilo;
 
 -- Vastuuhenkilo needs all basic CRUD operations on TAPAHTUMA
