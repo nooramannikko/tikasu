@@ -7,7 +7,7 @@ CREATE TABLE if not exists POSTITOIMIPAIKKA(
 DROP TABLE IF EXISTS POSTINUMERO;
 CREATE TABLE if not exists POSTINUMERO(
     Postinumero SERIAL NOT NULL PRIMARY KEY,
-    Postitoimipaikka REFERENCES POSTITOIMIPAIKKA(id)
+    Postitoimipaikka REFERENCES POSTITOIMIPAIKKA (Id)
             ON DELETE RESTRICT
             ON UPDATE CASCADE
 );
@@ -15,7 +15,7 @@ CREATE TABLE if not exists POSTINUMERO(
 DROP TABLE IF EXISTS OSOITE;
 CREATE TABLE if not exists OSOITE(
     Id integer PRIMARY KEY ,
-    Postinumero REFERENCES POSTINUMERO(Postinumero)
+    Postinumero REFERENCES POSTINUMERO (Postinumero)
             ON DELETE RESTRICT
             ON UPDATE CASCADE,
     Postiosoite varchar(100)
@@ -34,7 +34,7 @@ CREATE TABLE if not exists SIHTEERI(
     Nimi varchar(201),
     Puhelin varchar(12),
     Email varchar(60),
-    Osoite REFERENCES Osoite(Id)
+    Osoite REFERENCES Osoite (Id)
           ON DELETE RESTRICT
           ON UPDATE RESTRICT
 );
@@ -94,7 +94,7 @@ CREATE TABLE if not exists KATSOMOPAIKKA(
   Id SERIAL NOT NULL PRIMARY KEY ,
   Rivi integer NOT NULL,
   Paikka integer NOT NULL,
-  Katsomo integer NOT NULL REFERENCES Katsomo(Id)
+  Katsomo integer NOT NULL REFERENCES Katsomo (Id)
     ON DELETE RESTRICT
     ON UPDATE CASCADE
 );
