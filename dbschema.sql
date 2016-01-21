@@ -1,12 +1,12 @@
 DROP TABLE IF EXISTS POSTITOIMIPAIKKA;
 CREATE TABLE if not exists POSTITOIMIPAIKKA(
-    Id SERIAL NOT NULL PRIMARY KEY ,
+    Id SERIAL NOT NULL PRIMARY KEY,
     Postitoimipaikka VARCHAR(30)
 );
 
 DROP TABLE IF EXISTS POSTINUMERO;
 CREATE TABLE if not exists POSTINUMERO(
-    Postinumero SERIAL NOT NULL PRIMARY KEY,
+    Postinumero INTEGER NOT NULL PRIMARY KEY,
     Postitoimipaikka INTEGER REFERENCES POSTITOIMIPAIKKA (Id)
             ON DELETE RESTRICT
             ON UPDATE CASCADE
@@ -23,17 +23,18 @@ CREATE TABLE if not exists OSOITE(
 
 DROP TABLE IF EXISTS TAPAHTUMANJARJESTAJA;
 CREATE TABLE if not exists TAPAHTUMANJARJESTAJA(
-    YTunnus varchar(9) primary key,
+    YTunnus varchar(9) PRIMARY KEY,
     Nimi varchar(60)
 );
 
+
 DROP TABLE IF EXISTS SIHTEERI;
 CREATE TABLE if not exists SIHTEERI(
-    Tunnus varchar(20) NOT NULL PRIMARY KEY,
-    Salasana varchar(60),
-    Nimi varchar(201),
-    Puhelin varchar(12),
-    Email varchar(60),
+    Tunnus varchar(20) NOT NULL PRIMARY KEY CHECK(length(Tunnus)>7),
+    Salasana varchar(60) NOT NULL CHECK(length(Salasana)>7),
+    Nimi varchar(201) NOT NULL CHECK(length(Nimi)>0),
+    Puhelin varchar(12) NOT NULL CHECK(length(Puhelin)>0),
+    Email varchar(60) NOT NULL CHECK(length(Email)>0),
     Osoite INTEGER REFERENCES Osoite (Id)
           ON DELETE RESTRICT
           ON UPDATE RESTRICT
@@ -41,11 +42,11 @@ CREATE TABLE if not exists SIHTEERI(
 
 DROP TABLE IF EXISTS VASTUUHENKILO;
 CREATE TABLE if not exists VASTUUHENKILO(
-    Tunnus varchar(20) primary key,
-    Salasana varchar(60),
-    Nimi varchar(201),
-    Puhelin varchar(12),
-    Email varchar(60),
+    Tunnus varchar(20) NOT NULL primary key CHECK(length(Tunnus)>7),
+    Salasana varchar(60) NOT NULL CHECK(length(Salasana)>7),
+    Nimi varchar(201) NOT NULL CHECK(length(Nimi)>0),
+    Puhelin varchar(12) NOT NULL CHECK(length(Puhelin)>0),
+    Email varchar(60) NOT NULL CHECK(length(Email)>0),
     Osoite INTEGER REFERENCES Osoite(Id)
             ON DELETE RESTRICT
             ON UPDATE RESTRICT,
@@ -56,9 +57,6 @@ CREATE TABLE if not exists VASTUUHENKILO(
             ON DELETE SET NULL
             ON UPDATE CASCADE
 );
-
-
-
 
 DROP TABLE IF EXISTS SIHTEERIJARJESTAJA;
 CREATE TABLE IF NOT EXISTS SIHTEERIJARJESTAJA(
