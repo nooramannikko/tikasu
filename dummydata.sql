@@ -15,8 +15,8 @@ INSERT INTO OSOITE VALUES(3, '00200', 'Mannerheimintie 18');
 
 INSERT INTO SIHTEERI VALUES('sihteeri', 'salasana', 'Teemu Teekkari', '0501234567', 'teemu@teekkari.fi', 1);
 
-INSERT INTO SIHTEERIJARJESTAJA('sihteeri', '8736412-1');
-INSERT INTO SIHTEERIJARJESTAJA('sihteeri', '4610760-4');
+INSERT INTO SIHTEERIJARJESTAJA VALUES('sihteeri', '8736412-1');
+INSERT INTO SIHTEERIJARJESTAJA VALUES('sihteeri', '4610760-4');
 
 INSERT INTO VASTUUHENKILO VALUES('laarniotar', 'laarnionsana', 'Vastuu Henkilo', '04011122244', 'vastuu@henkilo.fi', 2, '8736412-1', 'sihteeri');
 INSERT INTO VASTUUHENKILO VALUES('lasselaarnio', 'lassensana', 'Lasse Laarnio', '0501325355', 'lasse@laarnio.fi', 3, '4610760-4', 'sihteeri');

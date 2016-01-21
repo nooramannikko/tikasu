@@ -166,6 +166,7 @@ CREATE TABLE if not exists KATSOMOPAIKKA(
     ON UPDATE CASCADE
 );
 
+-- Tapahtuman kategoria palauttaa oletus arvon jos valittu kategoria poistetaan
 DROP TABLE IF EXISTS TAPAHTUMA;
 CREATE TABLE IF NOT EXISTS TAPAHTUMA(
     Id SERIAL NOT NULL PRIMARY KEY ,
