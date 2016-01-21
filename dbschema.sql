@@ -6,7 +6,7 @@ CREATE TABLE if not exists POSTITOIMIPAIKKA(
 
 DROP TABLE IF EXISTS POSTINUMERO;
 CREATE TABLE if not exists POSTINUMERO(
-    Postinumero CHAR(5) NOT NULL PRIMARY KEY CHECK(Postinumero SIMILAR TO '^[0-9]{5}'),
+    Postinumero CHAR(5) NOT NULL PRIMARY KEY CHECK(Postinumero ~* '^[0-9]{5}'),
     Postitoimipaikka INTEGER REFERENCES POSTITOIMIPAIKKA (Id)
             ON DELETE RESTRICT
             ON UPDATE CASCADE
@@ -28,7 +28,7 @@ CREATE TABLE if not exists TAPAHTUMANJARJESTAJA(
         -- Check if tunnus is exactly 9 characters long
         length(YTunnus)=9 AND 
         -- Check that seven first characters are numeric
-        (substring(YTunnus FROM 1 FOR 7) SIMILAR TO '^[0-9]{7}') AND
+        (substring(YTunnus FROM 1 FOR 7) ~* '^[0-9]{7}') AND
         -- Check that 8th character is "-"
         (substring(YTunnus FROM 8 FOR 1) = '-') AND
         -- Check that last character is correct validation number
