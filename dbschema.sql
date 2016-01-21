@@ -23,7 +23,56 @@ CREATE TABLE if not exists OSOITE(
 
 DROP TABLE IF EXISTS TAPAHTUMANJARJESTAJA;
 CREATE TABLE if not exists TAPAHTUMANJARJESTAJA(
-    YTunnus varchar(9) PRIMARY KEY,
+    YTunnus varchar(9) PRIMARY KEY 
+      CHECK(
+        -- Check if tunnus is exactly 9 characters long
+        length(YTunnus)=9 AND 
+        -- Check that seven first characters are numeric
+        (substring(YTunnus FROM 1 FOR 7) SIMILAR TO '^[0-9]{7}') AND
+        -- Check that 8th character is "-"
+        (substring(YTunnus FROM 8 FOR 1) = '-') AND
+        -- Check that last character is correct validation number
+        -- http://www.finlex.fi/fi/laki/ajantasa/2001/20010288
+
+        -- If sum%11 is not 1
+        (((CAST (substring(YTunnus FROM 7 FOR 1)) AS INT) * 2 + 
+        (CAST (substring(YTunnus FROM 6 FOR 1)) AS INT) * 4 + 
+        (CAST (substring(YTunnus FROM 5 FOR 1)) AS INT) * 8 + 
+        (CAST (substring(YTunnus FROM 4 FOR 1)) AS INT) * 5 + 
+        (CAST (substring(YTunnus FROM 3 FOR 1)) AS INT) * 10 +
+        (CAST (substring(YTunnus FROM 2 FOR 1)) AS INT) * 9 + 
+        (CAST (substring(YTunnus FROM 1 FOR 1)) AS INT) * 7 ) % 11 != 1) AND 
+        
+        -- If sum%11 is zero 
+        ((((CAST (substring(YTunnus FROM 7 FOR 1)) AS INT) * 2 + 
+        (CAST (substring(YTunnus FROM 6 FOR 1)) AS INT) * 4 + 
+        (CAST (substring(YTunnus FROM 5 FOR 1)) AS INT) * 8 + 
+        (CAST (substring(YTunnus FROM 4 FOR 1)) AS INT) * 5 + 
+        (CAST (substring(YTunnus FROM 3 FOR 1)) AS INT) * 10 +
+        (CAST (substring(YTunnus FROM 2 FOR 1)) AS INT) * 9 + 
+        (CAST (substring(YTunnus FROM 1 FOR 1)) AS INT) * 7 ) % 11 = 0 AND 
+        -- then validation number is zero
+        substring(YTunnus FROM 9 FOR 1) = '0') OR 
+        
+        -- If sum%11 is greater than 1 
+        (((CAST (substring(YTunnus FROM 7 FOR 1)) AS INT) * 2 + 
+        (CAST (substring(YTunnus FROM 6 FOR 1)) AS INT) * 4 + 
+        (CAST (substring(YTunnus FROM 5 FOR 1)) AS INT) * 8 + 
+        (CAST (substring(YTunnus FROM 4 FOR 1)) AS INT) * 5 + 
+        (CAST (substring(YTunnus FROM 3 FOR 1)) AS INT) * 10 +
+        (CAST (substring(YTunnus FROM 2 FOR 1)) AS INT) * 9 + 
+        (CAST (substring(YTunnus FROM 1 FOR 1)) AS INT) * 7 ) % 11 > 1 AND 
+        -- then validation number is 11 - sum%11
+        (CAST (substring(YTunnus FROM 9 FOR 1)) AS INT) = 
+        (11 - (((CAST (substring(YTunnus FROM 7 FOR 1)) AS INT) * 2 + 
+        (CAST (substring(YTunnus FROM 6 FOR 1)) AS INT) * 4 + 
+        (CAST (substring(YTunnus FROM 5 FOR 1)) AS INT) * 8 + 
+        (CAST (substring(YTunnus FROM 4 FOR 1)) AS INT) * 5 + 
+        (CAST (substring(YTunnus FROM 3 FOR 1)) AS INT) * 10 +
+        (CAST (substring(YTunnus FROM 2 FOR 1)) AS INT) * 9 + 
+        (CAST (substring(YTunnus FROM 1 FOR 1)) AS INT) * 7 ) % 11))))
+
+      ), 
     Nimi varchar(60)
 );
 
