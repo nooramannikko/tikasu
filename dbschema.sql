@@ -53,7 +53,7 @@ CREATE TABLE if not exists SIHTEERI(
     Puhelin varchar(12),
     Email varchar(60),
     Osoite REFERENCES Osoite(Id)
-          ON DELETE RESTRICT,
+          ON DELETE RESTRICT
           ON UPDATE RESTRICT
 );
 
