@@ -35,7 +35,7 @@ CREATE TABLE if not exists TAPAHTUMANJARJESTAJA(
         -- http://www.finlex.fi/fi/laki/ajantasa/2001/20010288
 
         -- If sum%11 is not 1
-        (((CAST (substring(YTunnus FROM 7 FOR 1)) AS INTEGER) * 2 + 
+        (((CAST (substring(YTunnus FROM 7 FOR 1))::int) * 2 + 
         (CAST (substring(YTunnus FROM 6 FOR 1)) AS INTEGER) * 4 + 
         (CAST (substring(YTunnus FROM 5 FOR 1)) AS INTEGER) * 8 + 
         (CAST (substring(YTunnus FROM 4 FOR 1)) AS INTEGER) * 5 + 
