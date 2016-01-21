@@ -1,3 +1,10 @@
+-- Tämä tiedosto sisältää skriptit taulujen luomiseksi
+-- Taulujen luomisen yhteydessä niille määritetään pää- ja vierasavaimet
+-- Lisäksi määritellään tarkistuksia, jotka tehdään myös kantatasolla
+-- Pääosa tarkastuksista suoritetaan palvelin- ja käyttöliittymätasolla
+
+-- Ennen taulun luomista, poistetaan mahdolliset aiemmin luodut taulut
+-- Postitoimipaikka ei voi olla tyhjä
 DROP TABLE IF EXISTS POSTITOIMIPAIKKA;
 CREATE TABLE if not exists POSTITOIMIPAIKKA(
     Id SERIAL NOT NULL PRIMARY KEY,
@@ -5,6 +12,8 @@ CREATE TABLE if not exists POSTITOIMIPAIKKA(
 );
 
 DROP TABLE IF EXISTS POSTINUMERO;
+-- Postinumerot ovat uniikkeja ja liittyvät postitoimipaikkaan
+-- Postinumerot suomessa ovat 5-merkkiä pitkiä, ja koostuvat vain numeroista
 CREATE TABLE if not exists POSTINUMERO(
     Postinumero CHAR(5) NOT NULL PRIMARY KEY CHECK(Postinumero ~* '^[0-9]{5}'),
     Postitoimipaikka INTEGER REFERENCES POSTITOIMIPAIKKA (Id)
@@ -12,6 +21,7 @@ CREATE TABLE if not exists POSTINUMERO(
             ON UPDATE CASCADE
 );
 
+-- Osoite koostuu postiosoitteesta ja postinumerosta, johon viitataan
 DROP TABLE IF EXISTS OSOITE;
 CREATE TABLE if not exists OSOITE(
     Id integer PRIMARY KEY ,
@@ -21,12 +31,13 @@ CREATE TABLE if not exists OSOITE(
     Postiosoite varchar(100) CHECK(length(Postiosoite)>0)
 );
 
+-- Tarkistetaan oikeat y-tunnukset
 DROP TABLE IF EXISTS TAPAHTUMANJARJESTAJA;
 CREATE TABLE if not exists TAPAHTUMANJARJESTAJA(
-    YTunnus varchar(9) PRIMARY KEY 
+    YTunnus varchar(9) PRIMARY KEY
       CHECK(
         -- Check if tunnus is exactly 9 characters long
-        length(YTunnus)=9 AND 
+        length(YTunnus)=9 AND
         -- Check that seven first characters are numeric
         (substring(YTunnus FROM 1 FOR 7) ~* '^[0-9]{7}') AND
         -- Check that 8th character is "-"
@@ -35,48 +46,49 @@ CREATE TABLE if not exists TAPAHTUMANJARJESTAJA(
         -- http://www.finlex.fi/fi/laki/ajantasa/2001/20010288
 
         -- If sum%11 is not 1
-        ((((substring(YTunnus FROM 7 FOR 1))::int) * 2 + 
-        ((substring(YTunnus FROM 6 FOR 1))::int) * 4 + 
-        ((substring(YTunnus FROM 5 FOR 1))::int) * 8 + 
-        ((substring(YTunnus FROM 4 FOR 1))::int) * 5 + 
+        ((((substring(YTunnus FROM 7 FOR 1))::int) * 2 +
+        ((substring(YTunnus FROM 6 FOR 1))::int) * 4 +
+        ((substring(YTunnus FROM 5 FOR 1))::int) * 8 +
+        ((substring(YTunnus FROM 4 FOR 1))::int) * 5 +
         ((substring(YTunnus FROM 3 FOR 1))::int) * 10 +
-        ((substring(YTunnus FROM 2 FOR 1))::int) * 9 + 
-        ((substring(YTunnus FROM 1 FOR 1))::int) * 7 ) % 11 != 1) AND 
-        
-        -- If sum%11 is zero 
-        (((((substring(YTunnus FROM 7 FOR 1))::int) * 2 + 
-        ((substring(YTunnus FROM 6 FOR 1))::int) * 4 + 
-        ((substring(YTunnus FROM 5 FOR 1))::int) * 8 + 
-        ((substring(YTunnus FROM 4 FOR 1))::int) * 5 + 
+        ((substring(YTunnus FROM 2 FOR 1))::int) * 9 +
+        ((substring(YTunnus FROM 1 FOR 1))::int) * 7 ) % 11 != 1) AND
+
+        -- If sum%11 is zero
+        (((((substring(YTunnus FROM 7 FOR 1))::int) * 2 +
+        ((substring(YTunnus FROM 6 FOR 1))::int) * 4 +
+        ((substring(YTunnus FROM 5 FOR 1))::int) * 8 +
+        ((substring(YTunnus FROM 4 FOR 1))::int) * 5 +
         ((substring(YTunnus FROM 3 FOR 1))::int) * 10 +
-        ((substring(YTunnus FROM 2 FOR 1))::int) * 9 + 
-        ((substring(YTunnus FROM 1 FOR 1))::int) * 7 ) % 11 = 0 AND 
+        ((substring(YTunnus FROM 2 FOR 1))::int) * 9 +
+        ((substring(YTunnus FROM 1 FOR 1))::int) * 7 ) % 11 = 0 AND
         -- then validation number is zero
-        substring(YTunnus FROM 9 FOR 1) = '0') OR 
-        
-        -- If sum%11 is greater than 1 
-        ((((substring(YTunnus FROM 7 FOR 1))::int) * 2 + 
-        ((substring(YTunnus FROM 6 FOR 1))::int) * 4 + 
-        ((substring(YTunnus FROM 5 FOR 1))::int) * 8 + 
-        ((substring(YTunnus FROM 4 FOR 1))::int) * 5 + 
+        substring(YTunnus FROM 9 FOR 1) = '0') OR
+
+        -- If sum%11 is greater than 1
+        ((((substring(YTunnus FROM 7 FOR 1))::int) * 2 +
+        ((substring(YTunnus FROM 6 FOR 1))::int) * 4 +
+        ((substring(YTunnus FROM 5 FOR 1))::int) * 8 +
+        ((substring(YTunnus FROM 4 FOR 1))::int) * 5 +
         ((substring(YTunnus FROM 3 FOR 1))::int) * 10 +
-        ((substring(YTunnus FROM 2 FOR 1))::int) * 9 + 
-        ((substring(YTunnus FROM 1 FOR 1))::int) * 7 ) % 11 > 1 AND 
+        ((substring(YTunnus FROM 2 FOR 1))::int) * 9 +
+        ((substring(YTunnus FROM 1 FOR 1))::int) * 7 ) % 11 > 1 AND
         -- then validation number is 11 - sum%11
-        ((substring(YTunnus FROM 9 FOR 1))::int) = 
-        (11 - ((((substring(YTunnus FROM 7 FOR 1))::int) * 2 + 
-        ((substring(YTunnus FROM 6 FOR 1))::int) * 4 + 
-        ((substring(YTunnus FROM 5 FOR 1))::int) * 8 + 
-        ((substring(YTunnus FROM 4 FOR 1))::int) * 5 + 
+        ((substring(YTunnus FROM 9 FOR 1))::int) =
+        (11 - ((((substring(YTunnus FROM 7 FOR 1))::int) * 2 +
+        ((substring(YTunnus FROM 6 FOR 1))::int) * 4 +
+        ((substring(YTunnus FROM 5 FOR 1))::int) * 8 +
+        ((substring(YTunnus FROM 4 FOR 1))::int) * 5 +
         ((substring(YTunnus FROM 3 FOR 1))::int) * 10 +
-        ((substring(YTunnus FROM 2 FOR 1))::int) * 9 + 
+        ((substring(YTunnus FROM 2 FOR 1))::int) * 9 +
         ((substring(YTunnus FROM 1 FOR 1))::int) * 7 ) % 11))))
 
-      ), 
+      ),
     Nimi varchar(60)
 );
 
-
+-- Sihteerin pääavaimena uniikki tunnus
+-- Sihteerin ja tapahtumanjärjestäjän välinen suhde erillisessä taulussa
 DROP TABLE IF EXISTS SIHTEERI;
 CREATE TABLE if not exists SIHTEERI(
     Tunnus varchar(20) NOT NULL PRIMARY KEY CHECK(length(Tunnus)>7),
@@ -89,6 +101,8 @@ CREATE TABLE if not exists SIHTEERI(
           ON UPDATE RESTRICT
 );
 
+-- Vastuuhenkilö tietää sekä tapahtumanjärjestäjänsä, että sihteerin,
+-- joka on luonut tunnuksen
 DROP TABLE IF EXISTS VASTUUHENKILO;
 CREATE TABLE if not exists VASTUUHENKILO(
     Tunnus varchar(20) NOT NULL primary key CHECK(length(Tunnus)>7),
@@ -107,6 +121,8 @@ CREATE TABLE if not exists VASTUUHENKILO(
             ON UPDATE CASCADE
 );
 
+-- Sihteerin ja tapahtumanjarjestajan valinen suhde,
+-- pää-avain koostuu molempien id:stä
 DROP TABLE IF EXISTS SIHTEERIJARJESTAJA;
 CREATE TABLE IF NOT EXISTS SIHTEERIJARJESTAJA(
     Sihteeritunnus VARCHAR(20) REFERENCES SIHTEERI(tunnus)
@@ -124,8 +140,10 @@ CREATE TABLE IF NOT EXISTS KATEGORIA(
     Nimi VARCHAR(100)
 );
 
+-- Kun lipulta poistetaan kategoria, asetetaan sille default-arvo 1, viihde
 INSERT INTO Kategoria VALUES(1, 'viihde');
 
+-- Lipun tyyppi, esim. opiskelija/normaali
 DROP TABLE IF EXISTS TYYPPI;
 CREATE TABLE if not exists TYYPPI(
   Id SERIAL NOT NULL PRIMARY KEY ,
@@ -166,6 +184,7 @@ CREATE TABLE IF NOT EXISTS TAPAHTUMA(
             ON UPDATE CASCADE
 );
 
+
 DROP TABLE IF EXISTS LIPPU;
 CREATE TABLE if not exists LIPPU(
   Numero INTEGER NOT NULL PRIMARY KEY,
@@ -174,6 +193,7 @@ CREATE TABLE if not exists LIPPU(
     ON DELETE SET NULL
     ON UPDATE CASCADE,
   Tarkistettu boolean NOT NULL,
+  -- tilat 0 = vapaa, 1 = myyty, 2 = varattu
   Tila integer NOT NULL,
   Tapahtuma integer REFERENCES Tapahtuma(Id)
     ON DELETE RESTRICT
