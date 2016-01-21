@@ -7,7 +7,7 @@ CREATE TABLE if not exists POSTITOIMIPAIKKA(
 DROP TABLE IF EXISTS POSTINUMERO;
 CREATE TABLE if not exists POSTINUMERO(
     Postinumero SERIAL NOT NULL PRIMARY KEY,
-    Postitoimipaikka REFERENCES POSTITOIMIPAIKKA (Id)
+    Postitoimipaikka INTEGER REFERENCES POSTITOIMIPAIKKA (Id)
             ON DELETE RESTRICT
             ON UPDATE CASCADE
 );
@@ -15,7 +15,7 @@ CREATE TABLE if not exists POSTINUMERO(
 DROP TABLE IF EXISTS OSOITE;
 CREATE TABLE if not exists OSOITE(
     Id integer PRIMARY KEY ,
-    Postinumero REFERENCES POSTINUMERO (Postinumero)
+    Postinumero INTEGER REFERENCES POSTINUMERO (Postinumero)
             ON DELETE RESTRICT
             ON UPDATE CASCADE,
     Postiosoite varchar(100)
@@ -34,7 +34,7 @@ CREATE TABLE if not exists SIHTEERI(
     Nimi varchar(201),
     Puhelin varchar(12),
     Email varchar(60),
-    Osoite REFERENCES Osoite (Id)
+    Osoite INTEGER REFERENCES Osoite (Id)
           ON DELETE RESTRICT
           ON UPDATE RESTRICT
 );
@@ -46,13 +46,13 @@ CREATE TABLE if not exists VASTUUHENKILO(
     Nimi varchar(201),
     Puhelin varchar(12),
     Email varchar(60),
-    Osoite REFERENCES Osoite(Id)
+    Osoite INTEGER REFERENCES Osoite(Id)
             ON DELETE RESTRICT
             ON UPDATE RESTRICT,
-    Tapahtumanjarjestaja REFERENCES TAPAHTUMANJARJESTAJA(YTunnus)
+    Tapahtumanjarjestaja VARCHAR(9) REFERENCES TAPAHTUMANJARJESTAJA(YTunnus)
             ON DELETE CASCADE
             ON UPDATE CASCADE,
-    Sihteeri REFERENCES Sihteeri(Tunnus)
+    Sihteeri VARCHAR(20) REFERENCES Sihteeri(Tunnus)
             ON DELETE SET NULL
             ON UPDATE CASCADE
 );
@@ -62,10 +62,10 @@ CREATE TABLE if not exists VASTUUHENKILO(
 
 DROP TABLE IF EXISTS SIHTEERIJARJESTAJA;
 CREATE TABLE IF NOT EXISTS SIHTEERIJARJESTAJA(
-    Sihteeritunnus REFERENCES SIHTEERI(tunnus)
+    Sihteeritunnus VARCHAR(20) REFERENCES SIHTEERI(tunnus)
             ON DELETE CASCADE
             ON UPDATE CASCADE,
-    Jarjestajatunnus REFERENCES TAPAHTUMANJARJESTAJA(YTunnus)
+    Jarjestajatunnus VARCHAR(9) REFERENCES TAPAHTUMANJARJESTAJA(YTunnus)
             ON DELETE CASCADE
             ON UPDATE CASCADE,
     PRIMARY KEY(Sihteeritunnus, Jarjestajatunnus)
@@ -103,14 +103,14 @@ DROP TABLE IF EXISTS TAPAHTUMA;
 CREATE TABLE IF NOT EXISTS TAPAHTUMA(
     Id SERIAL NOT NULL PRIMARY KEY ,
     Nimi VARCHAR(50),
-    Kategoria REFERENCES KATEGORIA(Id),
+    Kategoria INTEGER REFERENCES KATEGORIA(Id),
     Alv INTEGER,
     Alkuaika VARCHAR(100),
     Loppuaika VARCHAR(100),
-    Osoiteid REFERENCES OSOITE(Id)
+    Osoiteid INTEGER REFERENCES OSOITE(Id)
             ON DELETE RESTRICT
             ON UPDATE RESTRICT,
-    Vastuuhenkilo REFERENCES VASTUUHENKILO(Tunnus)
+    Vastuuhenkilo VARCHAR(20) REFERENCES VASTUUHENKILO(Tunnus)
             ON DELETE SET DEFAULT
             ON UPDATE CASCADE
 );
