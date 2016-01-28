@@ -10,7 +10,7 @@ var users = require('./routes/users');
 
 var app = express();
 
-var knex = require('knex')({
+/*var knex = require('knex')({
   client: 'pg',
   connection: {
     host     : '127.0.0.1',
@@ -23,10 +23,32 @@ var knex = require('knex')({
 var bookshelf = require('bookshelf')(knex);
 
 var lippu = bookshelf.Model.extend({
-  tableName: 'LIPPU'
+  tableName: 'lippu',
+  idAttribute: 'numero'
 });
 
-console.log(lippu.fetchAll());
+console.log(knex.select().table;*/
+
+var knex = require('knex')({
+  client: 'postgresql',
+  connection: {
+    host     : 'localhost',
+    port     : '5432',
+    user     : 'admin',
+    password : 'jee',
+    database : 'LippuLasse'
+  }
+});
+
+var bookshelf = require('bookshelf')(knex);
+
+var lippu = bookshelf.Model.extend({
+  tableName: 'lippu'
+});
+
+lippu.collection().fetch().then(function (collection) {
+  console.log(collection.toJSON());
+});
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
