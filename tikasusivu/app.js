@@ -10,6 +10,24 @@ var users = require('./routes/users');
 
 var app = express();
 
+var knex = require('knex')({
+  client: 'pg',
+  connection: {
+    host     : '127.0.0.1',
+    user     : 'admin',
+    password : 'jee',
+    database : 'LippuLasse'
+  }
+});
+
+var bookshelf = require('bookshelf')(knex);
+
+var lippu = bookshelf.Model.extend({
+  tableName: 'LIPPU'
+});
+
+console.log(lippu.fetchAll());
+
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
