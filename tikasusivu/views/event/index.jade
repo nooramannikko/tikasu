@@ -17,13 +17,16 @@ block content
                         Loppuaika
                 th
                     span.
-                        Kategoriaid
+                        Kategoria
                 th
                     span.
                         Vastuuhenkilö
                 th
                     span.
-                        Osoiteid
+                        Osoite
+                th
+                    span.
+                        Postinumero
         tbody 
             each event in events
                 tr
@@ -38,13 +41,16 @@ block content
                             #{event.loppuaika}
                     td
                         span.
-                            #{event.kategoria}
+                            #{event.kategoria.nimi}
                     td
                         span.
                             #{event.vastuuhenkilo}
                     td
                         span.
-                            #{event.osoiteid}
+                            #{event.osoite.postiosoite}
+                    td
+                        span.
+                            #{event.osoite.postinumero}
 
 
 
