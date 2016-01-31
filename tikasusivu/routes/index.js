@@ -1,72 +1,10 @@
 var express = require('express');
 var router = express.Router();
+var passport = require('passport');
+var auth = require('../auth');
 
 var Lippu = require('../models/lippu');
 var Tapahtuma = require('../models/tapahtuma');
-
-var session = require('express-session');
-var passport = require('passport');
-var BasicStrategy = require('passport-http').BasicStrategy;
-var LocalStrategy = require('passport-local').Strategy;
-
-var Vastuuhenkilo = require('../models/vastuuhenkilo');
-
-router.use(session({
-  secret: 'tikasulaarniottaret',
-  resave: false,
-  saveUninitialized: false
-}));
-router.use(passport.initialize());
-router.use(passport.session());
-
-passport.use(new BasicStrategy(
-  function(username, password, done) {
-    Vastuuhenkilo.where({tunnus: username, salasana: password}).fetch().then(function(user){
-        if (user)
-        {
-            return done(null, user);
-        }
-        else
-        {
-            return done(null, false);
-        }
-    });
-  }
-));
-
-var basicAuth = passport.authenticate('basic', {session: true});
-
-function checkAuth(req, res, next) {
-  if (req.user) {
-    next();
-  }
-  else {
-    basicAuth(req, res, next);
-  }
-}
-
-passport.use(new LocalStrategy( 
-  function(username, password, done) {
-    Vastuuhenkilo.where({tunnus: username, salasana: password}).fetch().then(function(user){
-        if (user)
-        {
-            return done(null, user);
-        }
-        else
-        {
-            return done(null, false);
-        }
-    });
-  }
-));
-
-passport.serializeUser(function(user, done) {
-  done(null, user);
-});
-
-passport.deserializeUser(function(user, done) {
-  done(null, user);
-});
 
 function logout(req, res){
   userNowLoggedIn = null;
@@ -91,10 +29,8 @@ router.get('/', function(req, res, next) {
   res.render('index', { title: 'LippuLasse' });
 });
 
-var tapahtumat = [{'nimi': 'tapahtuma1', 'paikka': 'areena'}, {'nimi': 'tapahtuma2', 'paikka': 'areena'}];
-
 /* GET event listing */
-router.get('/events', checkAuth, function(req, res, next){
+router.get('/events', auth.check, function(req, res, next){
   Tapahtuma.fetchAll().then(function (events) {
     if (events){
       res.render('event/index', {title: 'Tapahtumalistaus', events: events.toJSON()});
@@ -106,7 +42,7 @@ router.get('/events', checkAuth, function(req, res, next){
   });
     
 });
-router.get('/api/tapahtumat', checkAuth);
-router.get('/api/v1/tapahtumat', checkAuth);
+router.get('/api/tapahtumat', auth.check);
+router.get('/api/v1/tapahtumat', auth.check);
 
 module.exports = router;

@@ -10,6 +10,21 @@ var api = require('./routes/api');
 
 var app = express();
 
+var session = require('express-session');
+var passport = require('passport');
+var BasicStrategy = require('passport-http').BasicStrategy;
+var LocalStrategy = require('passport-local').Strategy;
+var Vastuuhenkilo = require('./models/vastuuhenkilo');
+
+app.use(session({
+  secret: 'tikasulaarniottaret',
+  resave: false,
+  saveUninitialized: false
+}));
+
+app.use(passport.initialize());
+app.use(passport.session());
+
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
@@ -24,6 +39,44 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', routes);
 app.use('/api/v1', api);
+
+passport.use(new BasicStrategy(
+  function(username, password, done) {
+    Vastuuhenkilo.where({tunnus: username, salasana: password}).fetch().then(function(user){
+        if (user)
+        {
+            return done(null, user);
+        }
+        else
+        {
+            return done(null, false);
+        }
+    });
+  }
+));
+
+passport.use(new LocalStrategy( 
+  function(username, password, done) {
+    Vastuuhenkilo.where({tunnus: username, salasana: password}).fetch().then(function(user){
+        if (user)
+        {
+            return done(null, user);
+        }
+        else
+        {
+            return done(null, false);
+        }
+    });
+  }
+));
+
+passport.serializeUser(function(user, done) {
+  done(null, user);
+});
+
+passport.deserializeUser(function(user, done) {
+  done(null, user);
+});
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
