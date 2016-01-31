@@ -1,4 +1,4 @@
 *~
-./tikasusivu/node_modules/
-./.vagrant/
-./tikasusivu/.idea/
+tikasusivu/node_modules/
+.vagrant/
+tikasusivu/.idea/
