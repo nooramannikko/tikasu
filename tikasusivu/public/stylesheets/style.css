@@ -6,3 +6,8 @@ body {
 a {
   color: #00B7FF;
 }
+
+.input {
+	padding-top: 5px;
+	padding-bottom: 5px;
+}

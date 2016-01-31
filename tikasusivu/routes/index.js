@@ -14,7 +14,7 @@ function logout(req, res){
   });
 }
 
-router.post('/logout', logout);
+router.get('/logout', logout);
 
 router.post('/', passport.authenticate('local'),
     function (req, res) {
@@ -31,16 +31,16 @@ router.get('/', function(req, res, next) {
 
 /* GET event listing */
 router.get('/events', auth.check, function(req, res, next){
-  Tapahtuma.fetchAll().then(function (events) {
+  Tapahtuma.fetchAll({withRelated: ['kategoria', 'osoite']}).then(function (events) {
     if (events){
-      res.render('event/index', {title: 'Tapahtumalistaus', events: events.toJSON()});
+      res.render('event/index', {events: events.toJSON()});
     } else {
       res.status(404).json({error: 'EventNotFound'})
     }
   }).catch(function(err){
+    console.error(err);
     res.status(500).json({error: err});
   });
-    
 });
 router.get('/api/tapahtumat', auth.check);
 router.get('/api/v1/tapahtumat', auth.check);
