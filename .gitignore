@@ -1,3 +1,4 @@
-./tikasusivu/node_modules
+*~
+./tikasusivu/node_modules/
 ./.vagrant/
 ./tikasusivu/.idea/
