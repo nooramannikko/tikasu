@@ -3,8 +3,28 @@ extends ../layout
 block content
     h1.
          #{title}
-    table
-        tbody
+    table(class="pure-table")
+        thead
+            tr
+                th
+                    span.
+                        Tapahtuma
+                th
+                    span.
+                        Alkuaika
+                th
+                    span.
+                        Loppuaika
+                th
+                    span.
+                        Kategoriaid
+                th
+                    span.
+                        Vastuuhenkilö
+                th
+                    span.
+                        Osoiteid
+        tbody 
             each event in events
                 tr
                     td
@@ -12,6 +32,19 @@ block content
                             #{event.nimi}
                     td
                         span.
-                            #{event.paikka}
+                            #{event.alkuaika}
+                    td
+                        span.
+                            #{event.loppuaika}
+                    td
+                        span.
+                            #{event.kategoria}
+                    td
+                        span.
+                            #{event.vastuuhenkilo}
+                    td
+                        span.
+                            #{event.osoiteid}
+
 
 
