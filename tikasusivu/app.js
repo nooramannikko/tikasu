@@ -10,25 +10,6 @@ var users = require('./routes/users');
 
 var app = express();
 
-/*var knex = require('knex')({
-  client: 'pg',
-  connection: {
-    host     : '127.0.0.1',
-    user     : 'admin',
-    password : 'jee',
-    database : 'LippuLasse'
-  }
-});
-
-var bookshelf = require('bookshelf')(knex);
-
-var lippu = bookshelf.Model.extend({
-  tableName: 'lippu',
-  idAttribute: 'numero'
-});
-
-console.log(knex.select().table;*/
-
 var knex = require('knex')({
   client: 'postgresql',
   connection: {
@@ -43,7 +24,7 @@ var knex = require('knex')({
 var bookshelf = require('bookshelf')(knex);
 
 var lippu = bookshelf.Model.extend({
-  tableName: 'lippu'
+  tableName: 'tapahtuma'
 });
 
 lippu.collection().fetch().then(function (collection) {
@@ -63,7 +44,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', routes);
-app.use('/users', users);
+app.use('/api', api);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
