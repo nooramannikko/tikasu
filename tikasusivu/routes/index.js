@@ -42,7 +42,5 @@ router.get('/events', auth.check, function(req, res, next){
   });
     
 });
-router.get('/api/tapahtumat', auth.check);
-router.get('/api/v1/tapahtumat', auth.check);
 
 module.exports = router;

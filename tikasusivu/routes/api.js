@@ -1,15 +1,16 @@
 var express = require('express');
 var router = express.Router();
+var auth = require('../auth');
 
 var Lippu = require('../models/lippu');
 var Tapahtuma = require('../models/tapahtuma');
 var Kategoria = require('../models/kategoria');
 
-router.get('/', function(req, res, next) {
+router.get('/', auth.check, function(req, res, next) {
   res.send("Tässä api dokumentaatio ehkä mahollisesti");
 });
 
-router.get('/tapahtumat', function(req,res,next) {
+router.get('/tapahtumat', auth.check, function(req,res,next) {
   Tapahtuma.fetchAll({withRelated: ['kategoria', 'osoite']}).then(function (events) {
     if (events){
       res.send(events.toJSON());
@@ -22,7 +23,7 @@ router.get('/tapahtumat', function(req,res,next) {
   });
 });
 
-router.get('/tapahtumat/:id', function(req,res,next) {
+router.get('/tapahtumat/:id', auth.check, function(req,res,next) {
   var id = req.params['id'];
 
   Tapahtuma.where({id: id}).fetch({withRelated: ['kategoria', 'osoite']}).then(function (event) {
@@ -36,7 +37,6 @@ router.get('/tapahtumat/:id', function(req,res,next) {
     res.status(500).json({error: err});
   })
 });
-
 
 
 module.exports = router;
