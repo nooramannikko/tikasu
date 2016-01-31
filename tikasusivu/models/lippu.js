@@ -1,10 +1,9 @@
-"use strict";
+'use strict';
 
-module.exports = function(bookshelf) {
+var Bookshelf = require('../database');
 
-  var Lippu = bookshelf.Model.extend({
-    tableName: 'lippu'
-  });
+var Lippu = Bookshelf.Model.extend({
+  tableName: 'lippu'
+});
 
-  return Lippu;
-}
+module.exports = Bookshelf.model('Lippu', Lippu);
