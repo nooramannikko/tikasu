@@ -6,30 +6,9 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
 var routes = require('./routes/index');
-var users = require('./routes/users');
+var api = require('./routes/api');
 
 var app = express();
-
-var knex = require('knex')({
-  client: 'postgresql',
-  connection: {
-    host     : 'localhost',
-    port     : '5432',
-    user     : 'admin',
-    password : 'jee',
-    database : 'LippuLasse'
-  }
-});
-
-var bookshelf = require('bookshelf')(knex);
-
-var lippu = bookshelf.Model.extend({
-  tableName: 'tapahtuma'
-});
-
-lippu.collection().fetch().then(function (collection) {
-  console.log(collection.toJSON());
-});
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
