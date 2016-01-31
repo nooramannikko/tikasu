@@ -10,6 +10,19 @@ var api = require('./routes/api');
 
 var app = express();
 
+var knex = require('knex')({
+  client: 'postgresql',
+  connection: {
+    host     : 'localhost',
+    port     : '5432',
+    user     : 'admin',
+    password : 'jee',
+    database : 'LippuLasse'
+  }
+});
+
+var bookshelf = require('bookshelf')(knex);
+
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
