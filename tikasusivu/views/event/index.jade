@@ -1,0 +1,17 @@
+extends ../layout
+
+block content
+    h1.
+         #{title}
+    table
+        tbody
+            each event in events
+                tr
+                    td
+                        span.
+                            #{event.nimi}
+                    td
+                        span.
+                            #{event.paikka}
+
+
