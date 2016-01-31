@@ -6,11 +6,11 @@ router.get('/', function(req, res, next) {
   res.render('index', { title: 'LippuLasse' });
 });
 
-var events = [{'nimi': 'tapahtuma1', 'paikka': 'hartwall areena'}, {'nimi': 'tapahtuma2', 'paikka': 'cupola'}];
+var tapahtumat = [{'nimi': 'tapahtuma1', 'paikka': 'areena'}, {'nimi': 'tapahtuma2', 'paikka': 'areena'}];
 
 /* GET event listing */
 router.get('/events', function(req, res, next){
-    res.render('event/index', {title: 'Tapahtumalistaus', events: events});
+    res.render('event/index', {title: 'Tapahtumalistaus', events: tapahtumat});
 });
 
 module.exports = router;
