@@ -77,7 +77,7 @@ router.post('/logout', logout);
 
 router.post('/', passport.authenticate('local'),
     function (req, res) {
-        res.redirect('/api/tapahtumat');
+        res.redirect('/events');
     },
     function(err) {
         res.redirect('index');
