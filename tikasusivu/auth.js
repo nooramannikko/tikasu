@@ -47,10 +47,12 @@ function auth() {
   return{
     check: function(req, res, next) {
       if (req.user) {
+        req.auth = true;
         next();
       }
       else {
-        basicAuth(req, res, next);
+        req.auth = false;
+        next();
       }
     }
   }  

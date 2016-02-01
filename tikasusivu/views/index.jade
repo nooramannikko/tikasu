@@ -1,16 +1,4 @@
 extends layout
 
 block content
-  h1= title
   p Tervetuloa käyttämään LippuLassea!
-  form(name="login", method="post" class="pure-form")
-        div.input
-            span.label Käyttäjä 
-            div.textbox  
-              input(type="text", name="username")
-        div.input
-            span.label Salasana 
-            div.textbox 
-              input(type ="password" name="password")
-        div.actions
-            input(type="submit", value="Kirjaudu sisään", class="pure-button")
