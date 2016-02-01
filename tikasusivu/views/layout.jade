@@ -13,17 +13,19 @@ html
       ul.pure-menu-list
         if login
           li.pure-menu-item
-            a(href="/logout").pure-menu-link Uloskirjaus
-        else if !login
-          li.pure-menu-item
-            a(href="/login").pure-menu-link Kirjaudu sisään
-        if login
-          li.pure-menu-item
             a(href="/events").pure-menu-link Tapahtumat
         if login
           li.pure-menu-item
             a(href="/admin").pure-menu-link Hallinta
-      
+        if login
+          li.pure-menu-item
+              a(href="/logout").pure-menu-link Uloskirjaus
+        else if !login
+          li.pure-menu-item
+              a(href="/login").pure-menu-link Kirjaudu sisään
+        if login
+          li.pure-menu-item
+            a(href="#").pure-menu-link= name
 
 
     div.content

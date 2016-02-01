@@ -9,6 +9,7 @@ var Tapahtuma = require('../models/tapahtuma');
 function logout(req, res){
   req.logout();
   req.session.destroy(function (err) {
+    if(err) {res.sendStatus(500)}
     res.redirect('/');
   });
 }
@@ -21,7 +22,7 @@ router.post('/login', function(req, res, next) {
     if (!user) { return res.render('login', { message: "Tarkista tunnus ja salasana" }); }
     req.logIn(user, function(err) {
       if (err) { return next(err); }
-      return res.render('index', { login: true });
+      return res.render('index', { login: true, name: user.attributes.nimi });
     });
   })(req, res, next);
 
@@ -29,7 +30,12 @@ router.post('/login', function(req, res, next) {
 
 /* GET home page. */
 router.get('/', auth.check, function(req, res) {
-  res.render('index', { title: 'LippuLasse', login: req.auth });
+  if (req.auth) {
+    res.render('index', {title: 'LippuLasse', login: true, name: req.user.nimi});
+  } else {
+    res.render('index', {title: 'LippuLasse', login: false});
+  }
+
 });
 
 router.get('/login', function(req,res) {
@@ -41,7 +47,7 @@ router.get('/events', auth.check, function(req, res){
   if(req.auth) {
     Tapahtuma.fetchAll({withRelated: ['kategoria', 'osoite']}).then(function (events) {
       if (events){
-        res.render('event/index', {events: events.toJSON(), login: true});
+        res.render('event/index', {events: events.toJSON(), login: true, name: req.user.nimi});
       } else {
         res.status(404).json({error: 'EventNotFound'})
       }
@@ -60,7 +66,7 @@ router.get('/events', auth.check, function(req, res){
 
 router.get('/admin', auth.check, function(req,res) {
   if(req.auth) {
-    res.render('admin', {login: true});
+    res.render('admin', {login: true, name: req.user.nimi});
   }
   else {
     res.render('index', {login: false});
