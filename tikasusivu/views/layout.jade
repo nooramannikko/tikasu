@@ -5,6 +5,9 @@ html
     link(rel='stylesheet', href='/stylesheets/style.css')
     link(rel='stylesheet', href='/stylesheets/pure-min.css')
   body
+    if message
+      div#alert
+        a.alert(href="#alert")= message
     div.pure-menu.pure-menu-horizontal
       a(href="/").pure-menu-heading.pure-menu-link LippuLasse
       ul.pure-menu-list
@@ -20,9 +23,7 @@ html
         if login
           li.pure-menu-item
             a(href="/admin").pure-menu-link Hallinta
-      if message
-        div#alert
-          a.alert(href="#alert")= message
+      
 
 
     div.content
