@@ -52,7 +52,6 @@ router.get('/events', auth.check, function(req, res, next){
     });
   }
   else {
-    console.log("VITTU " + req.auth);
     res.render('login', { message: "Ole hyvä ja kirjaudu sisään", login: false});
   }
   
