@@ -3,7 +3,7 @@
 var knex = require('knex')({
   client: 'postgresql',
   connection: {
-    host     : 'localhost',
+    host     : '128.199.57.8',
     port     : '5432',
     user     : 'admin',
     password : 'jee',
