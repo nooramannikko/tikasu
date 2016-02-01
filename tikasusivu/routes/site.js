@@ -7,7 +7,6 @@ var Lippu = require('../models/lippu');
 var Tapahtuma = require('../models/tapahtuma');
 
 function logout(req, res){
-  userNowLoggedIn = null;
   req.logout();
   req.session.destroy(function (err) {
     res.redirect('/');
@@ -17,7 +16,7 @@ function logout(req, res){
 router.get('/logout', logout);
 
 router.post('/login', function(req, res, next) {
-  passport.authenticate('local', function(err, user, info) {
+  passport.authenticate('local', function(err, user) {
     if (err) { return next(err); }
     if (!user) { return res.render('login', { message: "Tarkista tunnus ja salasana" }); }
     req.logIn(user, function(err) {
@@ -29,16 +28,16 @@ router.post('/login', function(req, res, next) {
 });
 
 /* GET home page. */
-router.get('/', auth.check, function(req, res, next) {
+router.get('/', auth.check, function(req, res) {
   res.render('index', { title: 'LippuLasse', login: req.auth });
 });
 
-router.get('/login', function(req,res,next) {
+router.get('/login', function(req,res) {
   res.render('login');
 });
 
 /* GET event listing */
-router.get('/events', auth.check, function(req, res, next){
+router.get('/events', auth.check, function(req, res){
   if(req.auth) {
     Tapahtuma.fetchAll({withRelated: ['kategoria', 'osoite']}).then(function (events) {
       if (events){
@@ -59,7 +58,7 @@ router.get('/events', auth.check, function(req, res, next){
 
 /*GET admin panel*/
 
-router.get('/admin', auth.check, function(req,res,next) {
+router.get('/admin', auth.check, function(req,res) {
   if(req.auth) {
     res.render('admin', {login: true});
   }

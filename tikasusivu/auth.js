@@ -41,8 +41,6 @@ passport.deserializeUser(function(user, done) {
   done(null, user);
 });
 
-var basicAuth = passport.authenticate('basic', {session: true});
-
 function auth() {
   return{
     check: function(req, res, next) {
