@@ -84,7 +84,10 @@ CREATE TABLE if not exists TAPAHTUMANJARJESTAJA(
         ((substring(YTunnus FROM 1 FOR 1))::int) * 7 ) % 11))))
 
       ),
-    Nimi varchar(60)
+    Nimi varchar(60),
+    Osoite INTEGER REFERENCES Osoite (Id)
+          ON DELETE RESTRICT
+          ON UPDATE RESTRICT
 );
 
 -- Sihteerin pääavaimena uniikki tunnus
