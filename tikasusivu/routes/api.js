@@ -5,6 +5,7 @@ var auth = require('../auth');
 var Lippu = require('../models/lippu');
 var Tapahtuma = require('../models/tapahtuma');
 var Kategoria = require('../models/kategoria');
+var Tapahtumanjarjestaja = require('../models/tapahtumanjarjestaja');
 
 router.get('/', auth.check, function(req, res, next) {
   res.send("Tässä api dokumentaatio ehkä mahollisesti");
@@ -38,5 +39,37 @@ router.get('/tapahtumat/:id', auth.check, function(req,res,next) {
   })
 });
 
+router.delete('/tapahtumat/:id', auth.check, function(req,res,next) {
+  var name = req.params['id'];
+
+  Tapahtuma.forge({id: id}).fetch({require: true}).then(function (event) {
+    if (event) {
+      event.destroy().then(function() {
+        res.staus(200).json;
+      }).catch(function(err) {
+        res.status(500).json({error: err})
+      })
+    } else {
+      res.status(404).json({error: 'EventNotFound'})
+    }
+  }).catch(function(err) {
+    res.status(500).json({error: err});
+  })
+});
+
+router.get('/tapahtumanjarjestaja/:id', auth.check, function(req,res,next) {
+  var id = req.params['id'];
+
+  Tapahtumanjarjestaja.where({id : id}).fetch({withRelated: ['osoite']}).then(function (organizer) {
+    if (organizer){
+      res.send(organizer.toJSON());
+    } else {
+      res.status(404).json({error: 'OrganizerNotFound'})
+    }
+  }).catch(function(err){
+    console.error(err);
+    res.status(500).json({error: err});
+  })
+});
 
 module.exports = router;

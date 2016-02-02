@@ -5,6 +5,8 @@ var auth = require('../auth');
 
 var Lippu = require('../models/lippu');
 var Tapahtuma = require('../models/tapahtuma');
+var Tapahtumanjarjestaja = require('../models/tapahtumanjarjestaja')
+var Vastuuhenkilo = require('../models/vastuuhenkilo')
 
 function logout(req, res){
   req.logout();
@@ -66,9 +68,18 @@ router.get('/events', auth.check, function(req, res){
 
 router.get('/admin', auth.check, function(req,res) {
   if(req.auth) {
-    res.render('admin', {login: true, name: req.user.nimi});
-  }
-  else {
+    Vastuuhenkilo.where({tunnus: req.user.tunnus}).fetch({withRelated: ['tapahtumanjarjestaja']}).then(function (vhlo) {
+      if (vhlo){
+        res.render('admin', {login: true, name: req.user.nim});
+      } else {
+        res.status(404).json({error: 'UserNotFound'})
+      }
+    }).catch(function(err){
+      console.error(err);
+      res.status(500).json({error: err});
+    })
+    //res.render('admin', {login: true, name: req.user.nimi});
+  } else {
     res.render('index', {login: false});
   }
 });

@@ -1,4 +1,34 @@
 extends layout
 
 block content
-  p Lel, tähän tulee adminisetti
+    h1.
+        #{title}
+    table(class="pure-table")
+        thead
+            tr
+                th
+                    span.
+                        Tapahtumanjärjestäjä
+                th
+                    span.
+                        Y-Tunnus
+                th
+                    span.
+                        Osoite
+                th
+                    span.
+                        Postinumero
+        tbody
+            tr
+                td
+                    span.
+                        #{name}
+                td
+                    span.
+                        #{name}
+                td
+                    span.
+                        #{name}
+                td
+                    span.
+                        #{name}
