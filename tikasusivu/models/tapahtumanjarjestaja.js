@@ -2,7 +2,6 @@
 
 var Bookshelf = require('../database');
 
-require('./tapahtumanjarjestaja');
 require('./osoite');
 var Tapahtumanjarjestaja = Bookshelf.Model.extend({
   tableName: 'tapahtumanjarjestaja',

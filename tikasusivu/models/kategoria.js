@@ -2,13 +2,8 @@
 
 var Bookshelf = require('../database');
 
-require('./tapahtuma');
 var Kategoria = Bookshelf.Model.extend({
-  tableName: 'kategoria',
-
-  tapahtuma: function() {
-    return this.belongsToMany('Tapahtuma');
-  }
+  tableName: 'kategoria'
 });
 
 module.exports = Bookshelf.model('Kategoria', Kategoria);

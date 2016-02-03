@@ -3,16 +3,16 @@
 var Bookshelf = require('../database');
 
 require('./tapahtuma');
-require('./tapahtumanjarjestaja')
+require('./tapahtumanjarjestaja');
 var Osoite = Bookshelf.Model.extend({
   tableName: 'osoite',
 
   tapahtuma: function() {
-    return this.belongsToMany('Tapahtuma');
+    return this.belongsToMany('Tapahtuma', 'osoiteid');
   },
 
   tapahtumanjarjestaja: function() {
-    return this.belongsToMany('Tapahtumanjarjestaja');
+    return this.belongsToMany('Tapahtumanjarjestaja', 'osoite');
   }
 });
 
