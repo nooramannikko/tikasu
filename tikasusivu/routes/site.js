@@ -49,6 +49,7 @@ router.get('/events', auth.check, function(req, res){
   if(req.auth) {
     Tapahtuma.fetchAll({withRelated: ['kategoria', 'osoite']}).then(function (events) {
       if (events){
+        console.log(events.toJSON());
         res.render('event/index', {events: events.toJSON(), login: true, name: req.user.nimi});
       } else {
         res.status(404).json({error: 'EventNotFound'})
@@ -65,13 +66,13 @@ router.get('/events', auth.check, function(req, res){
 });
 
 /*GET admin panel*/
-
 router.get('/admin', auth.check, function(req,res) {
   if(req.auth) {
     // For whatever reason related tables are not working for anything else than Tapahtuma.......
-    Vastuuhenkilo.where({tunnus: req.user.tunnus}).fetch({withRelated: ['tapahtumanjarjestaja']}).then(function (vhlo) {
+    Vastuuhenkilo.where({tunnus: req.user.tunnus}).fetch({withRelated: ['tapahtumanjarjestajaobj', 'tapahtumanjarjestajaobj.osoiteobj']}).then(function (vhlo) {
       if (vhlo){
         console.log(vhlo.toJSON());
+        //console.log(vhlo.tapahtumanjarjestajaobj.related('osoite').toJSON());
         res.render('admin', {data: vhlo.toJSON(), login: true, name: req.user.nimi});
       } else {
         res.status(404).json({error: 'UserNotFound'})

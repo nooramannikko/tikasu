@@ -18,8 +18,8 @@ INSERT INTO SIHTEERI VALUES('sihteeri', 'salasana', 'Teemu Teekkari', '050123456
 INSERT INTO SIHTEERIJARJESTAJA VALUES('sihteeri', 1);
 INSERT INTO SIHTEERIJARJESTAJA VALUES('sihteeri', 2);
 
-INSERT INTO VASTUUHENKILO VALUES(1, 'laarniotar', 'laarnionsana', 'Vastuu Henkilo', '04011122244', 'vastuu@henkilo.fi', 2, '8736412-1', 'sihteeri');
-INSERT INTO VASTUUHENKILO VALUES(2, 'lasselaarnio', 'lassensana', 'Lasse Laarnio', '0501325355', 'lasse@laarnio.fi', 3, '4610760-4', 'sihteeri');
+INSERT INTO VASTUUHENKILO VALUES(1, 'laarniotar', 'laarnionsana', 'Vastuu Henkilo', '04011122244', 'vastuu@henkilo.fi', 2, 1, 'sihteeri');
+INSERT INTO VASTUUHENKILO VALUES(2, 'lasselaarnio', 'lassensana', 'Lasse Laarnio', '0501325355', 'lasse@laarnio.fi', 3, 2, 'sihteeri');
 
 INSERT INTO KATEGORIA VALUES(2, 'konsertti');
 INSERT INTO KATEGORIA VALUES(3, 'tanssi');
