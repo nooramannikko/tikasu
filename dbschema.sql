@@ -34,7 +34,8 @@ CREATE TABLE if not exists OSOITE(
 -- Tarkistetaan oikeat y-tunnukset
 DROP TABLE IF EXISTS TAPAHTUMANJARJESTAJA;
 CREATE TABLE if not exists TAPAHTUMANJARJESTAJA(
-    YTunnus varchar(9) PRIMARY KEY
+    Id SERIAL NOT NULL PRIMARY KEY,
+    YTunnus varchar(9) 
       CHECK(
         -- Check if tunnus is exactly 9 characters long
         length(YTunnus)=9 AND
@@ -108,7 +109,8 @@ CREATE TABLE if not exists SIHTEERI(
 -- joka on luonut tunnuksen
 DROP TABLE IF EXISTS VASTUUHENKILO;
 CREATE TABLE if not exists VASTUUHENKILO(
-    Tunnus varchar(20) NOT NULL primary key CHECK(length(Tunnus)>7),
+    Id SERIAL NOT NULL PRIMARY KEY,
+    Tunnus varchar(20) NOT NULL CHECK(length(Tunnus)>7),
     Salasana varchar(60) NOT NULL CHECK(length(Salasana)>7),
     Nimi varchar(201) NOT NULL CHECK(length(Nimi)>0),
     Puhelin varchar(12) NOT NULL CHECK(length(Puhelin)>0),

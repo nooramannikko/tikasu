@@ -10,16 +10,16 @@ INSERT INTO OSOITE VALUES(1, '33200', 'Tieteenkatu 2 b 17');
 INSERT INTO OSOITE VALUES(2, '92100', 'Rantakatu 18');
 INSERT INTO OSOITE VALUES(3, '00200', 'Mannerheimintie 18');
 
-INSERT INTO TAPAHTUMANJARJESTAJA VALUES('8736412-1', 'tapahtumalaarnio', 2);
-INSERT INTO TAPAHTUMANJARJESTAJA VALUES('4610760-4', 'tapahtumalasse', 3);
+INSERT INTO TAPAHTUMANJARJESTAJA VALUES(1, '8736412-1', 'tapahtumalaarnio', 2);
+INSERT INTO TAPAHTUMANJARJESTAJA VALUES(2, '4610760-4', 'tapahtumalasse', 3);
 
 INSERT INTO SIHTEERI VALUES('sihteeri', 'salasana', 'Teemu Teekkari', '0501234567', 'teemu@teekkari.fi', 1);
 
 INSERT INTO SIHTEERIJARJESTAJA VALUES('sihteeri', '8736412-1');
 INSERT INTO SIHTEERIJARJESTAJA VALUES('sihteeri', '4610760-4');
 
-INSERT INTO VASTUUHENKILO VALUES('laarniotar', 'laarnionsana', 'Vastuu Henkilo', '04011122244', 'vastuu@henkilo.fi', 2, '8736412-1', 'sihteeri');
-INSERT INTO VASTUUHENKILO VALUES('lasselaarnio', 'lassensana', 'Lasse Laarnio', '0501325355', 'lasse@laarnio.fi', 3, '4610760-4', 'sihteeri');
+INSERT INTO VASTUUHENKILO VALUES(1, 'laarniotar', 'laarnionsana', 'Vastuu Henkilo', '04011122244', 'vastuu@henkilo.fi', 2, '8736412-1', 'sihteeri');
+INSERT INTO VASTUUHENKILO VALUES(2, 'lasselaarnio', 'lassensana', 'Lasse Laarnio', '0501325355', 'lasse@laarnio.fi', 3, '4610760-4', 'sihteeri');
 
 INSERT INTO KATEGORIA VALUES(2, 'konsertti');
 INSERT INTO KATEGORIA VALUES(3, 'tanssi');
