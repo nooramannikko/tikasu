@@ -15,8 +15,8 @@ INSERT INTO TAPAHTUMANJARJESTAJA VALUES(2, '4610760-4', 'tapahtumalasse', 3);
 
 INSERT INTO SIHTEERI VALUES('sihteeri', 'salasana', 'Teemu Teekkari', '0501234567', 'teemu@teekkari.fi', 1);
 
-INSERT INTO SIHTEERIJARJESTAJA VALUES('sihteeri', '8736412-1');
-INSERT INTO SIHTEERIJARJESTAJA VALUES('sihteeri', '4610760-4');
+INSERT INTO SIHTEERIJARJESTAJA VALUES('sihteeri', 1);
+INSERT INTO SIHTEERIJARJESTAJA VALUES('sihteeri', 2);
 
 INSERT INTO VASTUUHENKILO VALUES(1, 'laarniotar', 'laarnionsana', 'Vastuu Henkilo', '04011122244', 'vastuu@henkilo.fi', 2, '8736412-1', 'sihteeri');
 INSERT INTO VASTUUHENKILO VALUES(2, 'lasselaarnio', 'lassensana', 'Lasse Laarnio', '0501325355', 'lasse@laarnio.fi', 3, '4610760-4', 'sihteeri');
@@ -26,8 +26,8 @@ INSERT INTO KATEGORIA VALUES(3, 'tanssi');
 INSERT INTO KATEGORIA VALUES(4, 'titesexboys');
 
 -- Tapahtuma
-INSERT INTO TAPAHTUMA VALUES(1, 'Laarnio konsertti', 3, 24,  '2016-02-15 10:23:06', '2016-02-15 13:23:06', 2, 'laarniotar');
-INSERT INTO TAPAHTUMA VALUES(2, 'Tanssiesitys', 3, 8,  '2016-02-19 10:23:06', '2016-02-19 15:20:03', 3, 'lasselaarnio');
+INSERT INTO TAPAHTUMA VALUES(1, 'Laarnio konsertti', 3, 24,  '2016-02-15 10:23:06', '2016-02-15 13:23:06', 2, 1);
+INSERT INTO TAPAHTUMA VALUES(2, 'Tanssiesitys', 3, 8,  '2016-02-19 10:23:06', '2016-02-19 15:20:03', 3, 2);
 
 -- Katsomot
 INSERT INTO KATSOMO VALUES(1, 'hartwallareena');
