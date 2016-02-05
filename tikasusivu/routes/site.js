@@ -7,6 +7,7 @@ var Lippu = require('../models/lippu');
 var Tapahtuma = require('../models/tapahtuma');
 var Tapahtumanjarjestaja = require('../models/tapahtumanjarjestaja');
 var Vastuuhenkilo = require('../models/vastuuhenkilo');
+var Kategoria = require('../models/kategoria');
 
 function logout(req, res){
   req.logout();
@@ -71,9 +72,65 @@ router.get('/admin', auth.check, function(req,res) {
     // For whatever reason related tables are not working for anything else than Tapahtuma.......
     Vastuuhenkilo.where({tunnus: req.user.tunnus}).fetch({withRelated: ['tapahtumanjarjestajaobj', 'tapahtumanjarjestajaobj.osoiteobj']}).then(function (vhlo) {
       if (vhlo){
-        console.log(vhlo.toJSON());
-        //console.log(vhlo.tapahtumanjarjestajaobj.related('osoite').toJSON());
-        res.render('admin', {data: vhlo.toJSON(), login: true, name: req.user.nimi});
+        //console.log(vhlo.toJSON());
+        // Get all vhlos based on organizer
+        Vastuuhenkilo.where({tapahtumanjarjestaja: vhlo.toJSON().tapahtumanjarjestaja}).fetchAll().then(function (vhlos) {
+          if (vhlos) {
+            //console.log(vhlos.toJSON());
+            var vhloIds = [];
+            for (var i = 0; i < vhlos.length; i++){
+              vhloIds.push(vhlos.toJSON()[i].id);
+            }
+            Tapahtuma.where('vastuuhenkilo', 'IN', vhloIds).fetchAll({withRelated: ['kategoria', 'osoite']}).then(function (events) {
+              if (events){
+                //console.log(events.toJSON());
+                var eventsIds = [];
+                for (var i = 0; i < events.length; i++){
+                  eventsIds.push(events.toJSON()[i].id);
+                }
+                // Get tickets for events
+                // How to make query with tapahtuma IN evenIds AND tila = 1 ??
+                Lippu.where('tapahtuma', 'IN', eventsIds).fetchAll().then(function (tickets) {
+                  if (tickets){
+                    var eventList = [];
+                    for (var j = 0; j < events.length; j++){
+                      var count = 0;
+                      for (var k = 0; k < tickets.length; k++){
+                        if (tickets.toJSON()[k].tila == 1){
+                          count += 1;
+                        }
+                      }
+                      eventList.push({
+                        nimi: events.toJSON()[j].nimi,
+                        alkuaika: events.toJSON()[j].alkuaika,
+                        loppuaika: events.toJSON()[j].loppuaika,
+                        osoite: events.toJSON()[j].osoite.postiosoite + ', ' + events.toJSON()[j].osoite.postinumero,
+                        kategoria: events.toJSON()[j].kategoria.nimi,
+                        liput: count
+                      });
+                    }
+                    // Get all categories
+                    Kategoria.fetchAll().then(function (categories) {
+                      if (categories){
+                        console.log(categories.toJSON());
+                        res.render('admin', {data: vhlo.toJSON(), events: eventList, categories: categories.toJSON(), vhlos: vhlos.toJSON(), username: req.user.tunnus, login: true, name: req.user.nimi});
+                      } else {
+                        res.status(404).json({error: 'CategoryNotFound'})
+                      }
+                    });
+                    //res.render('admin', {data: vhlo.toJSON(), events: eventList, login: true, name: req.user.nimi});
+                  } else {
+                    res.status(404).json({error: 'TicketNotFound'})
+                  }
+                });
+              } else {
+                res.status(404).json({error: 'EventNotFound'})
+              }
+            });
+          } else {
+            res.status(404).json({error: 'UserNotFound'})
+          }
+        });
       } else {
         res.status(404).json({error: 'UserNotFound'})
       }

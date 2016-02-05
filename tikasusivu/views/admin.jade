@@ -22,7 +22,7 @@ block content
             tr
                 td
                     span.
-                        #{data.nimi}
+                        #{data.tapahtumanjarjestajaobj.nimi}
                 td
                     span.
                         #{data.tapahtumanjarjestajaobj.ytunnus}
@@ -32,3 +32,100 @@ block content
                 td
                     span.
                         #{data.tapahtumanjarjestajaobj.osoiteobj.postinumero}
+
+    h3.
+        Uusi tapahtuma
+    form(name="newEvent", action="/tapahtumat" method="post" class="pure-form")
+        div.input
+            spin.label Nimi
+            div.textbox
+                input(type="text", name="eventName")
+        div.input
+            spin.label Alkuaika
+            div.textbox
+                input(type="text", name="startTime" placeholder="HH:MM ddmmyyy")
+        div.input
+            spin.label Loppuaika
+            div.textbox
+                input(type="text", name="endTime" placeholder="HH:MM ddmmyyy")
+        div.input
+            spin.label Osoite
+            div.textbox
+                input(type="text", name="address")
+        div.input
+            spin.label Postinumero
+            div.textbox
+                input(type="text", name="postalCode")
+        div.input
+            spin.label Kategoria
+            div.dropdown
+                select(name="category")
+                    option(value='')
+                    each cat in categories
+                        option(selected=cat.id == 1) #{cat.nimi}
+        div.input
+            spin.label ALV-%
+            div.textbox
+                input(type="text", name="alv")
+        div.input
+            spin.label Vastuuhenkilö
+            div.dropdown
+                select(name="vhlo")
+                    option(value='')
+                    each vhlo in vhlos
+                        option(selected=vhlo.tunnus == username) #{vhlo.tunnus}
+        div.actions
+            input(type="submit", value="Luo tapahtuma", class="pure-button")
+
+
+
+    h3.
+        Tapahtumat
+    table(class="pure-table")
+        thead
+            tr
+                th
+                    span.
+                        Tapahtuma
+                th
+                    span.
+                        Alkuaika
+                th
+                    span.
+                        Loppuaika
+                th
+                    span.
+                        Kategoria
+                th
+                    span.
+                        Osoite
+                th
+                    span.
+                        Ostetut liput (kpl)
+                th
+                    span.
+                        Toiminnot
+        tbody
+            each event in events
+                tr
+                    td
+                        span.
+                            #{event.nimi}
+                    td
+                        span.
+                            #{event.alkuaika}
+                    td
+                        span.
+                            #{event.loppuaika}
+                    td
+                        span.
+                            #{event.kategoria}
+                    td
+                        span.
+                            #{event.osoite}
+                    td
+                        span.
+                            #{event.liput}
+                    td
+                        span.
+                            TODO: Napit "Muokkaa" ja "Poista"
