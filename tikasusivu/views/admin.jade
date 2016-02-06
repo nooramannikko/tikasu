@@ -35,7 +35,7 @@ block content
 
     h3.
         Uusi tapahtuma
-    form(name="newEvent", action="/tapahtumat" method="post" class="pure-form")
+    form(name="newEvent", action="/events" method="post" class="pure-form")
         div.input
             spin.label Nimi
             div.textbox
@@ -62,7 +62,7 @@ block content
                 select(name="category")
                     option(value='')
                     each cat in categories
-                        option(selected=cat.id == 1) #{cat.nimi}
+                        option(selected=cat.id == 1, value=cat.id) #{cat.nimi}
         div.input
             spin.label ALV-%
             div.textbox
@@ -73,7 +73,7 @@ block content
                 select(name="vhlo")
                     option(value='')
                     each vhlo in vhlos
-                        option(selected=vhlo.tunnus == username) #{vhlo.tunnus}
+                        option(selected=vhlo.tunnus == username, value=vhlo.id) #{vhlo.tunnus}
         div.actions
             input(type="submit", value="Luo tapahtuma", class="pure-button")
 
@@ -127,5 +127,5 @@ block content
                         span.
                             #{event.liput}
                     td
-                        span.
-                            TODO: Napit "Muokkaa" ja "Poista"
+                        form(name="delete" method="post" action="/events"+event.id)
+                            button(type="submit") Delete

@@ -27,6 +27,9 @@ block content
                 th
                     span.
                         Postinumero
+                th
+                    span.
+                        Alv
         tbody 
             each event in events
                 tr
@@ -51,6 +54,9 @@ block content
                     td
                         span.
                             #{event.osoite.postinumero}
+                    td
+                        span
+                            #{event.alv}
 
 
 

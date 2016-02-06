@@ -66,6 +66,26 @@ router.get('/events', auth.check, function(req, res){
   
 });
 
+router.post('/events', auth.check, function(req, res){
+  if(req.auth) {
+    console.log(req.body);
+    Tapahtuma.forge({
+      nimi: req.body.eventName,
+      alv: parseInt(req.body.alv)
+    }).save()
+      .then(function (screen) {
+        res.render('admin');;
+      }).catch(function (error) {
+          console.log(error);
+          res.status(500).json('An error occured');
+      });
+    }
+  else {
+    res.render('login', { message: "Ole hyvä ja kirjaudu sisään", login: false});
+  }
+  
+});
+
 /*GET admin panel*/
 router.get('/admin', auth.check, function(req,res) {
   if(req.auth) {

@@ -41,7 +41,6 @@ router.get('/tapahtumat/:id', auth.check, function(req,res,next) {
 
 router.delete('/tapahtumat/:id', auth.check, function(req,res,next) {
   var id = req.params['id'];
-
   Tapahtuma.forge({id: id}).fetch({require: true}).then(function (event) {
     if (event) {
       event.destroy().then(function() {
