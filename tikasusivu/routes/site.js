@@ -70,29 +70,27 @@ router.get('/events', function(req, res){
 /* POST new event*/
 router.post('/events', function(req,res){
   if(req.user) {
+    console.log("Creating new event:");
     console.log(req.body);
     // Creating new event
-    Bookshelf.transaction(function(t) {
-      return new Tapahtuma({
-        nimi: req.body.eventName,
-        alv: parseInt(req.body.alv),
-        alkuaika: req.body.startTime,
-        loppuaika: req.body.endTime,
-        vastuuhenkilo: req.body.vhlo,
-        kategoria: req.body.category
-      }).save(null, {transacting: t})
+    Tapahtuma.forge({
+      nimi: req.body.eventName,
+      alv: parseInt(req.body.alv),
+      alkuaika: req.body.startTime,
+      loppuaika: req.body.endTime,
+      vastuuhenkilo: req.body.vhlo,
+      kategoria: req.body.category
+    }).save()
         .then(function (screen) {
           res.redirect(req.get('referer'));
         }).catch(function (error) {
-          console.log(error);
-          res.status(500).json('An error occured');
-        });
+      console.log(error);
+      res.status(500).json('An error occured');
     });
   }
   else {
     res.render('login', { message: "Ole hyvä ja kirjaudu sisään", login: false});
   }
-  
 });
 
 router.post('/deleteEvent/:id', function(req, res){
