@@ -146,7 +146,7 @@ CREATE TABLE IF NOT EXISTS KATEGORIA(
 );
 
 -- Kun lipulta poistetaan kategoria, asetetaan sille default-arvo 1, viihde
-INSERT INTO Kategoria VALUES(1, 'viihde');
+INSERT INTO Kategoria (Nimi) VALUES('viihde');
 
 -- Lipun tyyppi, esim. opiskelija/normaali
 DROP TABLE IF EXISTS TYYPPI;
