@@ -97,7 +97,7 @@ router.post('/deleteEvent/:id', function(req, res){
     Tapahtuma.forge({id: id}).fetch({require: true}).then(function (event) {
     if (event) {
       event.destroy().then(function() {
-        res.status(200).json();
+        res.redirect(req.get('referer'));
       }).catch(function(err) {
         res.status(500).json({error: err})
       })
@@ -113,18 +113,16 @@ router.post('/deleteEvent/:id', function(req, res){
 /*GET admin panel*/
 router.get('/admin', function(req,res) {
   if(req.user) {
-    // For whatever reason related tables are not working for anything else than Tapahtuma.......
-    Vastuuhenkilo.where({tunnus: req.user.tunnus}).fetch({withRelated: ['tapahtumanjarjestajaobj', 'tapahtumanjarjestajaobj.osoiteobj']}).then(function (vhlo) {
+    Vastuuhenkilo.where('tunnus', req.user.tunnus).fetch({withRelated: ['tapahtumanjarjestajaobj', 'tapahtumanjarjestajaobj.osoiteobj']}).then(function (vhlo) {
       if (vhlo){
-        //console.log(vhlo.toJSON());
         // Get all vhlos based on organizer
-        Vastuuhenkilo.where({tapahtumanjarjestaja: vhlo.toJSON().tapahtumanjarjestaja}).fetchAll().then(function (vhlos) {
+        Vastuuhenkilo.where({tapahtumanjarjestaja: vhlo.attributes.tapahtumanjarjestaja}).fetchAll().then(function (vhlos) {
           if (vhlos) {
             //console.log(vhlos.toJSON());
             var vhloIds = [];
-            for (var i = 0; i < vhlos.length; i++){
-              vhloIds.push(vhlos.toJSON()[i].id);
-            }
+            vhlos.forEach(function(hlo) {
+              vhloIds.push(hlo.attributes.id)
+            });
             Tapahtuma.where('vastuuhenkilo', 'IN', vhloIds).fetchAll({withRelated: ['kategoria', 'osoite']}).then(function (events) {
               if (events){
                 //console.log(events.toJSON());
