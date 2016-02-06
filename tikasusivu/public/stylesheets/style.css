@@ -77,11 +77,11 @@ a {
     top: -45px;
     width: 100%;
     z-index: 10;
-    -webkit-animation: alert 1s ease forwards;
-       -moz-animation: alert 1s ease forwards;
-        -ms-animation: alert 1s ease forwards;
-         -o-animation: alert 1s ease forwards;
-            animation: alert 1s ease forwards;
+    -webkit-animation: alert 0.5s ease forwards;
+       -moz-animation: alert 0.5s ease forwards;
+        -ms-animation: alert 0.5s ease forwards;
+         -o-animation: alert 0.5s ease forwards;
+            animation: alert 0.5s ease forwards;
 }
 
 /* Animation */
@@ -110,4 +110,86 @@ a {
     0% { opacity: 0; }
     50% { opacity: 0; }
     100% { top: 0; }
+}
+
+/* Alert */
+
+#alert2 {
+  position: relative;
+}
+#alert2:hover:after {
+  background: hsla(0,0%,0%,.8);
+  border-radius: 3px;
+  color: #f6f6f6;
+  content: 'Klikkaa piilottaaksesi';
+  font: bold 12px/30px sans-serif;
+  height: 30px;
+  left: 50%;
+  margin-left: -60px;
+  position: absolute;
+  text-align: center;
+  top: 50px;
+  width: 120px;
+}
+#alert2:hover:before {
+  border-bottom: 10px solid hsla(0,0%,0%,.8);
+  border-left: 10px solid transparent;
+  border-right: 10px solid transparent;
+  content: '';
+  height: 0;
+  left: 50%;
+  margin-left: -10px;
+  position: absolute;
+  top: 40px;
+  width: 0;
+}
+#alert2:target {
+  display: none;
+}
+.alert2 {
+  background-color: #0077c5;
+  background-size: 20px 20px;
+  color: #f6f6f6;
+  display: block;
+  font: bold 16px/40px sans-serif;
+  height: 40px;
+  position: absolute;
+  text-align: center;
+  text-decoration: none;
+  top: -45px;
+  width: 100%;
+  z-index: 10;
+  -webkit-animation: alert 0.5s ease forwards;
+  -moz-animation: alert 0.5s ease forwards;
+  -ms-animation: alert 0.5s ease forwards;
+  -o-animation: alert 0.5s ease forwards;
+  animation: alert 0.5s ease forwards;
+}
+
+/* Animation */
+
+@-webkit-keyframes alert2 {
+  0% { opacity: 0; }
+  50% { opacity: 0; }
+  100% { top: 0; }
+}
+@-moz-keyframes alert2 {
+  0% { opacity: 0; }
+  50% { opacity: 0; }
+  100% { top: 0; }
+}
+@-ms-keyframes alert2 {
+  0% { opacity: 0; }
+  50% { opacity: 0; }
+  100% { top: 0; }
+}
+@-o-keyframes alert2 {
+  0% { opacity: 0; }
+  50% { opacity: 0; }
+  100% { top: 0; }
+}
+@keyframes alert2 {
+  0% { opacity: 0; }
+  50% { opacity: 0; }
+  100% { top: 0; }
 }
