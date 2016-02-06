@@ -6,9 +6,44 @@ var auth = require('../auth');
 var Bookshelf = require('../database');
 var Lippu = require('../models/lippu');
 var Tapahtuma = require('../models/tapahtuma');
+var Osoite = require('../models/osoite');
 var Tapahtumanjarjestaja = require('../models/tapahtumanjarjestaja');
 var Vastuuhenkilo = require('../models/vastuuhenkilo');
 var Kategoria = require('../models/kategoria');
+var Postinumero = require('../models/postinumero');
+var Postitoimipaikka = require('../models/postitoimipaikka');
+
+var postinumeroCreate = function (data) {
+  return Postinumero.forge({
+    postinumero: data.postalCode,
+    postitoimipaikka: data.postalAreaId
+  }).save();
+};
+
+var postitoimipaikkaCreate = function (data) {
+  return Postitoimipaikka.forge({
+    postitoimipaikka: data.postalArea
+  }).save();
+};
+
+var osoiteCreate = function (data) {
+  return Osoite.forge({
+    postiosoite: data.address,
+    postinumero: data.codeId
+  }).save();
+};
+
+var tapahtumaCreate = function(data) {
+  return Tapahtuma.forge({
+    nimi: data.eventName,
+    alv: parseInt(data.alv),
+    alkuaika: data.startTime,
+    loppuaika: data.endTime,
+    vastuuhenkilo: data.vhlo,
+    kategoria: data.category,
+    osoiteid: data.addressId
+  }).save();
+};
 
 function logout(req, res){
   req.logout();
@@ -72,20 +107,22 @@ router.post('/events', function(req,res){
   if(req.user) {
     console.log("Creating new event:");
     console.log(req.body);
-    // Creating new event
-    Tapahtuma.forge({
-      nimi: req.body.eventName,
-      alv: parseInt(req.body.alv),
-      alkuaika: req.body.startTime,
-      loppuaika: req.body.endTime,
-      vastuuhenkilo: req.body.vhlo,
-      kategoria: req.body.category
-    }).save()
-        .then(function (screen) {
-          res.redirect(req.get('referer'));
-        }).catch(function (error) {
-      console.log(error);
-      res.status(500).json('An error occured');
+    postitoimipaikkaCreate({postalArea: req.body.postalArea}).then(function(area) {
+      postinumeroCreate({postalCode: req.body.postalCode, postalAreaId: area.attributes.id}).then(function (code) {
+        osoiteCreate({address: req.body.address, codeId: code.attributes.id}).then(function (address) {
+          tapahtumaCreate({
+            eventName: req.body.eventName,
+            alv: req.body.alv,
+            startTime: req.body.startTime,
+            endTime: req.body.endTime,
+            vhlo: req.body.vhlo,
+            category: req.body.category,
+            addressId: address.attributes.id
+          }).then(function () {
+            res.redirect(req.get('referer'));
+          });
+        });
+      });
     });
   }
   else {
@@ -98,18 +135,18 @@ router.post('/deleteEvent/:id', function(req, res){
   if(req.user){
     var id = req.params['id'];
     Tapahtuma.forge({id: id}).fetch({require: true}).then(function (event) {
-    if (event) {
-      event.destroy().then(function() {
-        res.redirect(req.get('referer'));
-      }).catch(function(err) {
-        res.status(500).json({error: err})
-      })
-    } else {
-      res.status(404).json({error: 'EventNotFound'})
-    }
-  }).catch(function(err) {
-    res.status(500).json({error: err});
-  })
+      if (event) {
+        event.destroy().then(function() {
+          res.redirect(req.get('referer'));
+        }).catch(function(err) {
+          res.status(500).json({error: err})
+        });
+      } else {
+        res.status(404).json({error: 'EventNotFound'})
+      }
+    }).catch(function(err) {
+      res.status(500).json({error: err});
+    });
   }
 });
 

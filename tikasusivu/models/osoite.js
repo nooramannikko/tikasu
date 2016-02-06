@@ -11,6 +11,10 @@ var Osoite = Bookshelf.Model.extend({
     return this.hasMany('Tapahtuma', 'osoiteid');
   },
 
+  postinumero: function() {
+    return this.belongsTo('Postinumero', 'postinumero');
+  },
+
   tapahtumanjarjestaja: function() {
     return this.hasMany('Tapahtumanjarjestaja', 'osoite');
   }

@@ -14,6 +14,7 @@ var Tapahtuma = Bookshelf.Model.extend({
   osoite: function() {
     return this.belongsTo('Osoite', 'osoiteid');
   }
+
 });
 
 module.exports = Bookshelf.model('Tapahtuma', Tapahtuma);

@@ -65,7 +65,7 @@ router.delete('/tapahtumat/:id', auth.check, function(req,res,next) {
   var startTime = req.body.startTime; // tapahtuman alkuaika
   var endTime = req.body.endTime; // tapahtuman loppuaika
   var address = req.body.address; // tapahtuman osoite
-  var zipCode = req.body.zipCode; // tapahtuman postinumero
+  var zipCode = req.body.zipCode; // tapahtuman postinumero.js
   // tapahtuman id ja vastuuhenkilö automaattisesti
 });*/
 
