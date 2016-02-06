@@ -23,7 +23,7 @@ VALUES('laarniotar', 'laarnionsana', 'Vastuu Henkilo', '04011122244', 'vastuu@he
 INSERT INTO VASTUUHENKILO (Tunnus, Salasana, Nimi, Puhelin, Email, Osoite, Tapahtumanjarjestaja, Sihteeri)
 VALUES('lasselaarnio', 'lassensana', 'Lasse Laarnio', '0501325355', 'lasse@laarnio.fi', 3, 2, 'sihteeri');
 
-INSERT INTO KATEGORIA (Nimi) VALUES('kosertti');
+INSERT INTO KATEGORIA (Nimi) VALUES('konsertti');
 INSERT INTO KATEGORIA (Nimi) VALUES('tanssi');
 INSERT INTO KATEGORIA (Nimi) VALUES('titesexboys');
 

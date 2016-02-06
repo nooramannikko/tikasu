@@ -70,6 +70,7 @@ router.get('/events', function(req, res){
 /* POST new event*/
 router.post('/events', function(req,res){
   if(req.user) {
+    console.log("Creating new event:");
     console.log(req.body);
     // Creating new event
     Tapahtuma.forge({
@@ -81,7 +82,7 @@ router.post('/events', function(req,res){
       kategoria: req.body.category
     }).save()
         .then(function (screen) {
-          res.render('admin');
+          res.redirect(req.get('referer'));
         }).catch(function (error) {
       console.log(error);
       res.status(500).json('An error occured');
