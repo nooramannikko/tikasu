@@ -142,7 +142,7 @@ router.get('/editEvent/:id', function(req,res){
 /*GET admin panel*/
 router.get('/admin', function(req,res) {
   if(req.user) {
-    Vastuuhenkilo.where('tunnus', req.user.tunnus).fetch({withRelated: ['tapahtumanjarjestajaobj', 'tapahtumanjarjestajaobj.osoiteobj']}).then(function (vhlo) {
+    Vastuuhenkilo.where('tunnus', req.user.tunnus).fetch({withRelated: ['tapahtumanjarjestaja', 'tapahtumanjarjestaja.osoite']}).then(function (vhlo) {
       if (vhlo){
         // Get all vhlos based on organizer
         Vastuuhenkilo.where({tapahtumanjarjestaja: vhlo.attributes.tapahtumanjarjestaja}).fetchAll().then(function (vhlos) {

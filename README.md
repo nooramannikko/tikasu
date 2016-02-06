@@ -33,8 +33,11 @@ dropdb -U admin LippuLasse
 UUDELLEENLUONTI:
 
 navigoi skriptien kansioon
+git pull
 createdb -U admin LippuLasse
 psql -d LippuLasse --username admin -f dbschema.sql
+psql -d LippuLasse --username admin -f dummydataDev.sql
+
 
 
 

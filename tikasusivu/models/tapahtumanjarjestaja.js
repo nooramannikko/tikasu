@@ -6,8 +6,8 @@ require('./osoite');
 var Tapahtumanjarjestaja = Bookshelf.Model.extend({
   tableName: 'tapahtumanjarjestaja',
 
-  osoiteobj: function() {
-    return this.hasOne('Osoite', 'id');
+  osoite: function() {
+    return this.belongsTo('Osoite', 'osoite');
   }
 });
 

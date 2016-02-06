@@ -6,8 +6,8 @@ require('./tapahtumanjarjestaja');
 var Vastuuhenkilo = Bookshelf.Model.extend({
   tableName: 'vastuuhenkilo',
 
-  tapahtumanjarjestajaobj: function() {
-    return this.hasOne('Tapahtumanjarjestaja', 'id');
+  tapahtumanjarjestaja: function() {
+    return this.belongsTo('Tapahtumanjarjestaja', 'tapahtumanjarjestaja');
   }
 });
 

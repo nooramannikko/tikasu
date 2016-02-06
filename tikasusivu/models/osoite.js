@@ -8,11 +8,11 @@ var Osoite = Bookshelf.Model.extend({
   tableName: 'osoite',
 
   tapahtuma: function() {
-    return this.belongsToMany('Tapahtuma', 'osoiteid');
+    return this.hasMany('Tapahtuma', 'osoiteid');
   },
 
   tapahtumanjarjestaja: function() {
-    return this.belongsToMany('Tapahtumanjarjestaja', 'osoite');
+    return this.hasMany('Tapahtumanjarjestaja', 'osoite');
   }
 });
 

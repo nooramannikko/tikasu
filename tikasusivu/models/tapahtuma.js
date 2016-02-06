@@ -8,11 +8,11 @@ var Tapahtuma = Bookshelf.Model.extend({
   tableName: 'tapahtuma',
 
   kategoria: function() {
-    return this.hasOne('Kategoria', 'id');
+    return this.belongsTo('Kategoria', 'kategoria');
   },
 
   osoite: function() {
-    return this.hasOne('Osoite', 'id');
+    return this.belongsTo('Osoite', 'osoiteid');
   }
 });
 
