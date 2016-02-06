@@ -66,12 +66,16 @@ router.get('/events', auth.check, function(req, res){
   
 });
 
+/* POST new event*/
 router.post('/events', auth.check, function(req, res){
   if(req.auth) {
     console.log(req.body);
+    // Creating new user
     Tapahtuma.forge({
       nimi: req.body.eventName,
-      alv: parseInt(req.body.alv)
+      alv: parseInt(req.body.alv),
+      vastuuhenkilo: req.body.vhlo,
+      kategoria: req.body.category
     }).save()
       .then(function (screen) {
         res.render('admin');;
@@ -84,6 +88,26 @@ router.post('/events', auth.check, function(req, res){
     res.render('login', { message: "Ole hyvä ja kirjaudu sisään", login: false});
   }
   
+});
+
+router.post('/deleteEvent/:id', auth.check, function(req, res){
+  console.log("delete");
+  if(req.auth){
+    var id = req.params['id'];
+    Tapahtuma.forge({id: id}).fetch({require: true}).then(function (event) {
+    if (event) {
+      event.destroy().then(function() {
+        res.status(200).json();
+      }).catch(function(err) {
+        res.status(500).json({error: err})
+      })
+    } else {
+      res.status(404).json({error: 'EventNotFound'})
+    }
+  }).catch(function(err) {
+    res.status(500).json({error: err});
+  })
+  }
 });
 
 /*GET admin panel*/
@@ -121,6 +145,7 @@ router.get('/admin', auth.check, function(req,res) {
                         }
                       }
                       eventList.push({
+                        id: events.toJSON()[j].id,
                         nimi: events.toJSON()[j].nimi,
                         alkuaika: events.toJSON()[j].alkuaika,
                         loppuaika: events.toJSON()[j].loppuaika,
