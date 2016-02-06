@@ -44,14 +44,8 @@ passport.deserializeUser(function(user, done) {
 function auth() {
   return{
     check: function(req, res, next) {
-      if (req.user) {
-        req.auth = true;
-        next();
-      }
-      else {
-        req.auth = false;
-        next();
-      }
+      console.log("AUTH.CHECK EI OLE TARPEELLINEN, KÄYTÄ LOGGAAMISEN TUNNISTAMISEEN REQ.USER:ia")
+      next()
     }
   }  
 }

@@ -26,6 +26,10 @@ a {
   padding-right: 30px;
 }
 
+.goRight {
+  float: right;
+}
+
 /* Alert */
 
 #alert {
@@ -63,7 +67,6 @@ a {
 .alert {
     background-color: #c4453c;
     background-size: 20px 20px;
-    box-shadow: 0 5px 0 hsla(0,0%,0%);
     color: #f6f6f6;
     display: block;
     font: bold 16px/40px sans-serif;
