@@ -24,9 +24,9 @@ DATABASEN TAPPAMINEN:
 
 (käytä su ja loggaa rootiksi tai käytä sudoa dropdb:hen)
 
-psql -U admin LippuLasse
+psql -U admin postgres
 update pg_database set datallowconn = 'false' where datname = 'LippuLasse';
-SELECT pg_terminate_backend(procpid) FROM pg_stat_activity WHERE datname = 'LippuLasse';
+select pg_terminate_backend(pid) from pg_stat_activity where datname='LippuLasse';
 \q
 dropdb -U admin LippuLasse
 
