@@ -3,6 +3,7 @@ var router = express.Router();
 var passport = require('passport');
 var auth = require('../auth');
 
+var Bookshelf = require('../database');
 var Lippu = require('../models/lippu');
 var Tapahtuma = require('../models/tapahtuma');
 var Tapahtumanjarjestaja = require('../models/tapahtumanjarjestaja');
@@ -71,21 +72,23 @@ router.post('/events', function(req,res){
   if(req.user) {
     console.log(req.body);
     // Creating new event
-    Tapahtuma.forge({
-      nimi: req.body.eventName,
-      alv: parseInt(req.body.alv),
-      alkuaika: req.body.startTime,
-      loppuaika: req.body.endTime,
-      vastuuhenkilo: req.body.vhlo,
-      kategoria: req.body.category
-    }).save()
-      .then(function (screen) {
-        res.render('admin');
-      }).catch(function (error) {
+    Bookshelf.transaction(function(t) {
+      return new Tapahtuma({
+        nimi: req.body.eventName,
+        alv: parseInt(req.body.alv),
+        alkuaika: req.body.startTime,
+        loppuaika: req.body.endTime,
+        vastuuhenkilo: req.body.vhlo,
+        kategoria: req.body.category
+      }).save(null, {transacting: t})
+        .then(function (screen) {
+          res.redirect(req.get('referer'));
+        }).catch(function (error) {
           console.log(error);
           res.status(500).json('An error occured');
-      });
-    }
+        });
+    });
+  }
   else {
     res.render('login', { message: "Ole hyvä ja kirjaudu sisään", login: false});
   }
@@ -127,9 +130,9 @@ router.get('/admin', function(req,res) {
             });
             Tapahtuma.where('vastuuhenkilo', 'IN', vhloIds).fetchAll({withRelated: ['kategoria', 'osoite']}).then(function (events) {
               if (events){
-                //console.log(events.toJSON());
                 var eventsIds = [];
                 var eventsJson = events.toJSON();
+                console.log(eventsJson);
                 eventsJson.forEach(function(event) {
                   eventsIds.push(event.id)
                 });
@@ -151,7 +154,6 @@ router.get('/admin', function(req,res) {
                   // Get all categories
                   Kategoria.fetchAll().then(function (categories) {
                     if (categories){
-                      console.log(categories.toJSON());
                       res.render('admin', {data: vhlo.toJSON(), events: eventList, categories: categories.toJSON(), vhlos: vhlos.toJSON(), username: req.user.tunnus, login: true, name: req.user.nimi});
                     } else {
                       res.status(404).json({error: 'CategoryNotFound'})

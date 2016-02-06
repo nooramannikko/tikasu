@@ -1,15 +1,7 @@
 'use strict';
 
-var knex = require('knex')({
-  client: 'postgresql',
-  connection: {
-    host     : '128.199.57.8',
-    port     : '5432',
-    user     : 'admin',
-    password : 'jee',
-    database : 'LippuLasse'
-  }
-});
+var knexfile = require('./knexfile');
+var knex = require('knex')(knexfile.development, {debug: true});
 var bookshelf = require('bookshelf')(knex);
 bookshelf.plugin('registry'); // Resolve circular dependencies with relations
 
