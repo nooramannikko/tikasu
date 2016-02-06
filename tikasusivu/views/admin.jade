@@ -128,4 +128,6 @@ block content
                             #{event.liput}
                     td
                         form(name="delete" method="post" action="/deleteEvent/"+event.id)
-                            button(type="submit") Delete
+                            button(type="submit") Poista
+                        form(name="edit" method="get" action="/editEvent/"+event.id)
+                            button(type="submit") Muokkaa

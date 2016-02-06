@@ -115,6 +115,32 @@ router.post('/deleteEvent/:id', function(req, res){
   }
 });
 
+router.get('/editEvent/:id', function(req,res){
+  console.log("edit");
+  if (req.user){
+    var id = req.params['id'];
+    Tapahtuma.where({id: id}).fetch({withRelated: ['kategoria', 'osoite']}).then(function (event) {
+      if (event){
+        var startTime = event.attributes.alkuaika.getFullYear() +  "-" + ("0"+event.attributes.alkuaika.getMonth()).slice(-2) + "-" + ("0"+event.attributes.alkuaika.getDate()).slice(-2) + "T" + ("0"+event.attributes.alkuaika.getHours()).slice(-2) + ":" + ("0"+event.attributes.alkuaika.getMinutes()).slice(-2);
+        var endTime = event.attributes.alkuaika.getFullYear() +  "-" + ("0"+event.attributes.loppuaika.getMonth()).slice(-2) + "-" + ("0"+event.attributes.loppuaika.getDate()).slice(-2) + "T" + ("0"+event.attributes.loppuaika.getHours()).slice(-2) + ":" + ("0"+event.attributes.loppuaika.getMinutes()).slice(-2);
+        Kategoria.fetchAll().then(function (categories) {
+          if (categories) {
+            res.render('event/edit', {event: event.toJSON(), categories: categories.toJSON(), username: req.user.tunnus, userid: req.user.id, startTime: startTime, endTime: endTime, login: true, name: req.user.nimi});
+          } else {
+            res.status(404).json({error: 'CategoryNotFound'})
+          }
+        })
+      } else {
+        res.status(404).json({error: 'EventNotFound'})
+      }
+    }).catch(function(err){
+      res.status(500).json({error: err});
+    })
+  } else {
+    res.render('login', { message: "Ole hyvä ja kirjaudu sisään", login: false});
+  }
+});
+
 /*GET admin panel*/
 router.get('/admin', function(req,res) {
   if(req.user) {

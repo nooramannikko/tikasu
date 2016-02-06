@@ -1,0 +1,43 @@
+extends ../layout
+
+block content
+    h3.
+        Uusi tapahtuma
+    form(name="editEvent", action="/saveEvent/"+event.id, method="post", class="pure-form")
+        div.input
+            spin.label Nimi
+            div.textbox
+                input(type="text", name="eventName", value=event.nimi)
+        div.input
+            spin.label Alkuaika
+            div.textbox
+                input(type="datetime-local", name="startTime" value=startTime)
+        div.input
+            spin.label Loppuaika
+            div.textbox
+                input(type="datetime-local", name="endTime" value=endTime)
+        div.input
+            spin.label Osoite
+            div.textbox
+                input(type="text", name="address", value=event.osoite.postiosoite)
+        div.input
+            spin.label Postinumero
+            div.textbox
+                input(type="text", name="postalCode", value=event.osoite.postinumero)
+        div.input
+            spin.label Kategoria
+            div.dropdown
+                select(name="category")
+                    option(value='')
+                    each cat in categories
+                        option(selected=cat.id == event.kategoria.id, value=cat.id) #{cat.nimi}
+        div.input
+            spin.label ALV-%
+            div.textbox
+                input(type="text", name="alv", value=event.alv)
+        div.input
+            spin.label Vastuuhenkilö
+            div.textbox
+                input(type="text", name="vhlo", value=username, disabled)
+        div.actions
+            input(type="submit", value="Tallenna muutokset", class="pure-button")
