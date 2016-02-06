@@ -24,7 +24,7 @@ CREATE TABLE if not exists POSTINUMERO(
 -- Osoite koostuu postiosoitteesta ja postinumerosta, johon viitataan
 DROP TABLE IF EXISTS OSOITE;
 CREATE TABLE if not exists OSOITE(
-    Id integer PRIMARY KEY ,
+    Id SERIAL PRIMARY KEY,
     Postinumero CHAR(5) REFERENCES POSTINUMERO (Postinumero)
             ON DELETE RESTRICT
             ON UPDATE CASCADE,
