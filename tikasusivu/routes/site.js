@@ -67,18 +67,20 @@ router.get('/events', function(req, res){
 });
 
 /* POST new event*/
-router.post('/events', function(req, res){
+router.post('/events', function(req,res){
   if(req.user) {
     console.log(req.body);
     // Creating new event
     Tapahtuma.forge({
       nimi: req.body.eventName,
       alv: parseInt(req.body.alv),
+      alkuaika: req.body.startTime,
+      loppuaika: req.body.endTime,
       vastuuhenkilo: req.body.vhlo,
       kategoria: req.body.category
     }).save()
       .then(function (screen) {
-        res.render('admin');;
+        res.render('admin');
       }).catch(function (error) {
           console.log(error);
           res.status(500).json('An error occured');
