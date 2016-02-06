@@ -31,7 +31,7 @@ INSERT INTO KATEGORIA (Nimi) VALUES('titesexboys');
 INSERT INTO TAPAHTUMA (Nimi, Kategoria, Alv, Alkuaika, Loppuaika, Osoiteid, Vastuuhenkilo)
 VALUES('Laarnio konsertti', 3, 24,  '2016-02-15 10:23:06', '2016-02-15 13:23:06', 2, 1);
 INSERT INTO TAPAHTUMA (Nimi, Kategoria, Alv, Alkuaika, Loppuaika, Osoiteid, Vastuuhenkilo)
-INSERT INTO TAPAHTUMA VALUES('Tanssiesitys', 3, 8,  '2016-02-19 10:23:06', '2016-02-19 15:20:03', 3, 2);
+VALUES('Tanssiesitys', 3, 8,  '2016-02-19 10:23:06', '2016-02-19 15:20:03', 3, 2);
 
 -- Katsomot
 INSERT INTO KATSOMO (Nimi) VALUES('hartwallareena');
@@ -50,7 +50,7 @@ VALUES(1, 2, 1);
 INSERT INTO KATSOMOPAIKKA (Rivi, Paikka, Katsomo)
 VALUES(1, 3, 1);
 INSERT INTO KATSOMOPAIKKA (Rivi, Paikka, Katsomo)
-VALUES(4, 1, 4, 1);
+VALUES(1, 4, 1);
 
 -- Seisomakatsomon paikkoja
 INSERT INTO KATSOMOPAIKKA (Rivi, Paikka, Katsomo)
