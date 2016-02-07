@@ -5,6 +5,7 @@ var Bookshelf = require('../database');
 require('./postinumero');
 var Postitoimipaikka = Bookshelf.Model.extend({
   tableName: 'postitoimipaikka',
+  idAttribute: 'postitoimipaikka',
 
   postinumero: function() {
     return this.hasMany('Postinumero', 'postinumero');

@@ -16,11 +16,11 @@ var Postitoimipaikka = require('../models/postitoimipaikka');
 var postinumeroCreate = function (data) {
   return new Postinumero({
     postinumero: data.postalCode
-  }).save({postitoimipaikka: data.postalAreaId});
+  }).save({postitoimipaikka: data.postalArea});
 };
 
 var postitoimipaikkaCreate = function (data) {
-  return Postitoimipaikka.forge({
+  return new Postitoimipaikka({
     postitoimipaikka: data.postalArea
   }).save();
 };
