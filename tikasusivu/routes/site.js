@@ -301,7 +301,7 @@ router.get('/report', function(req,res) {
     req.query.category ? reportQuery = reportQuery.where('kategoriaid', parseInt(req.query.category)) : null;
     req.query.startTime ? reportQuery = reportQuery.where('alkuaika', '>=', req.query.startTime) : null;
     req.query.endTime ? reportQuery = reportQuery.where('loppuaika', '<=', req.query.endTime) : null;
-z
+
     reportQuery.fetchAll().then(function (report) {
       if (report && report.toJSON().length != 0){
         res.render('report', { data: report.toJSON(), login: true, name: req.user.nimi });
