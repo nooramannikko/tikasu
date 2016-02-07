@@ -6,13 +6,14 @@ require('./osoite');
 require('./postitoimipaikka');
 var Postinumero = Bookshelf.Model.extend({
   tableName: 'postinumero',
-
-  postinumero: function() {
+  idAttribute: 'postinumero',
+  
+  osoite: function() {
     return this.hasMany('Osoite', 'postinumero');
   },
 
   postitoimipaikka: function() {
-    return this.belongsTo('Postitoimipaikka', 'id');
+    return this.belongsTo('Postitoimipaikka', 'postitoimipaikka');
   }
 
 });

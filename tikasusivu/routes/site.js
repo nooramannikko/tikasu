@@ -14,10 +14,9 @@ var Postinumero = require('../models/postinumero');
 var Postitoimipaikka = require('../models/postitoimipaikka');
 
 var postinumeroCreate = function (data) {
-  return Postinumero.forge({
-    postinumero: data.postalCode,
-    postitoimipaikka: data.postalAreaId
-  }).save();
+  return new Postinumero({
+    postinumero: data.postalCode
+  }).save({postitoimipaikka: data.postalAreaId});
 };
 
 var postitoimipaikkaCreate = function (data) {
@@ -108,8 +107,11 @@ router.post('/events', function(req,res){
     console.log("Creating new event:");
     console.log(req.body);
     postitoimipaikkaCreate({postalArea: req.body.postalArea}).then(function(area) {
+      console.log(area);
       postinumeroCreate({postalCode: req.body.postalCode, postalAreaId: area.attributes.id}).then(function (code) {
+        console.log(code);
         osoiteCreate({address: req.body.address, codeId: code.attributes.id}).then(function (address) {
+          console.log(address);
           tapahtumaCreate({
             eventName: req.body.eventName,
             alv: req.body.alv,

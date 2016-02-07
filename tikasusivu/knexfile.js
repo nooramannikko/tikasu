@@ -3,6 +3,7 @@
 module.exports = {
 
   development: {
+    debug: true,
     client: 'postgresql',
     connection: {
       host     : '128.199.57.8',
