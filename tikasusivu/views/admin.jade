@@ -132,7 +132,10 @@ block content
                                 Ostetut liput (kpl)
                         th
                             span.
-                                Toiminnot
+
+                        th
+                            span.
+
                 tbody
                     each event in events
                         tr
@@ -156,6 +159,7 @@ block content
                                     #{event.liput}
                             td
                                 form(name="delete" method="post" action="/deleteEvent/"+event.id)
-                                    button(type="submit") Poista
-                                form(name="edit" method="get" action="/editEvent/"+event.id)
-                                    button(type="submit") Muokkaa
+                                    button.pure-button(type="submit") Poista
+                            td
+                                form(name="edit" method="get" action="/editEvent/" + event.id)
+                                    button.pure-button(type="submit") Muokkaa

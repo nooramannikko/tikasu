@@ -6,12 +6,55 @@ var Bookshelf = require('../database');
 var Lippu = require('../models/lippu');
 var Tapahtuma = require('../models/tapahtuma');
 var Osoite = require('../models/osoite');
-var Tapahtumanjarjestaja = require('../models/tapahtumanjarjestaja');
 var Vastuuhenkilo = require('../models/vastuuhenkilo');
 var Kategoria = require('../models/kategoria');
 var Postinumero = require('../models/postinumero');
 var Postitoimipaikka = require('../models/postitoimipaikka');
 var Raportti = require('../models/raportti');
+
+var msg;
+function messageBox () {
+  var message = "";
+  var isReadbool = false;
+  return {
+    setMessage: function (text) {
+      message = text;
+      isReadbool = false;
+      return message;
+    },
+    getMessage: function () {
+      isReadbool = true;
+      return message;
+    },
+    isRead: function () {
+      return isReadbool;
+    }
+  }
+}
+
+msg = messageBox();
+
+var alert;
+function alertBox () {
+  var message = "";
+  var isReadbool = false;
+  return {
+    setAlert: function (text) {
+      message = text;
+      isReadbool = false;
+      return message;
+    },
+    getAlert: function () {
+      isReadbool = true;
+      return message;
+    },
+    isRead: function () {
+      return isReadbool;
+    }
+  }
+}
+
+alert = alertBox();
 
 function logout(req, res){
   req.logout();
@@ -26,7 +69,7 @@ router.get('/logout', logout);
 router.post('/login', function(req, res, next) {
   passport.authenticate('local', function(err, user) {
     if (err) { return next(err); }
-    if (!user) { return res.render('login', { message: "Tarkista tunnus ja salasana" }); }
+    if (!user) { return res.render('login', { alertmsg: "Tarkista tunnus ja salasana" }); }
     req.logIn(user, function(err) {
       if (err) { return next(err); }
       return res.render('index', { login: true, name: user.attributes.nimi });
@@ -85,7 +128,7 @@ router.get('/events', function(req, res){
     });
   }
   else {
-    res.render('login', { message: "Ole hyvä ja kirjaudu sisään", login: false});
+    res.render('login', { alertmsg: "Ole hyvä ja kirjaudu sisään", login: false});
   }
   
 });
@@ -127,15 +170,17 @@ router.post('/events', function(req,res){
           transaction: t
         });
       })
-    }).then(function (event) {
+    }).then(function () {
       // Transaction complete, render page
+      msg.setMessage("Tapahtuma luotu");
       res.redirect(req.get('referer'));
-    }).catch(function (err){
-      res.status(400).json({error: err});
+    }).catch(function (){
+      alert.setAlert("Tallennuksessa tapahtui virhe");
+      res.redirect(req.get('referer'));
     });
   }
   else {
-    res.render('login', { message: "Ole hyvä ja kirjaudu sisään", login: false});
+    res.render('login', { alertmsg: "Ole hyvä ja kirjaudu sisään", login: false});
   }
 });
 
@@ -146,9 +191,11 @@ router.post('/deleteEvent/:id', function(req, res){
     Tapahtuma.forge({id: id}).fetch({require: true}).then(function (event) {
       if (event) {
         event.destroy().then(function() {
-          res.redirect(req.get('referer'));
-        }).catch(function(err) {
-          res.status(500).json({error: err})
+          msg.setMessage("Tapahtuma poistettu");
+          res.redirect('../admin');
+        }).catch(function() {
+          alert.setAlert("Poistossa tapahtui virhe");
+          res.redirect('../admin');
         });
       } else {
         res.status(404).json({error: 'EventNotFound'})
@@ -182,13 +229,14 @@ router.get('/editEvent/:id', function(req,res){
       res.status(500).json({error: err});
     })
   } else {
-    res.render('login', { message: "Ole hyvä ja kirjaudu sisään", login: false});
+    res.render('login', { alertmsg: "Ole hyvä ja kirjaudu sisään", login: false});
   }
 });
 
 
 router.post('/saveEvent/:id', function(req, res) {
   if(req.user) {
+
     console.log("Modifying event:");
     console.log(req.user);
     console.log(req.body);
@@ -224,14 +272,18 @@ router.post('/saveEvent/:id', function(req, res) {
           transaction: t
         });
       })
-    }).then(function (event) {
+    }).then(function () {
       // Transaction complete, render page
+      console.log("kukkuu1");
+      msg.setMessage("Tapahtuma muokattu");
+      console.log("kukkuu2");
       res.redirect('../admin');
-    }).catch(function (err){
-      res.status(400).json({error: err});
+    }).catch(function (){
+      alert.setAlert("Muokkauksessa tapahtui virhe");
+      res.redirect('../admin');
     });
   } else {
-    res.render('login', { message: "Ole hyvä ja kirjaudu sisään", login: false});
+    res.render('login', { alertmsg: "Ole hyvä ja kirjaudu sisään", login: false});
   }
 });
 
@@ -281,7 +333,9 @@ router.get('/admin', function(req,res) {
                         categories: categories.toJSON(),
                         vhlos: vhlos.toJSON(),
                         username: req.user.tunnus,
-                        login: true, name: req.user.nimi
+                        login: true, name: req.user.nimi,
+                        notice: msg.isRead() ? null : msg.getMessage(),
+                        alertmsg: alert.isRead() ? null : alert.getAlert()
                       });
                     } else {
                       res.status(404).json({error: 'CategoryNotFound'})
@@ -304,7 +358,7 @@ router.get('/admin', function(req,res) {
       res.status(500).json({error: err});
     });
   } else {
-    res.render('index', {login: false});
+    res.render('index', {login: false, alertmsg: "Ole hyvä ja kirjaudu sisään" });
   }
 });
 
@@ -325,14 +379,15 @@ router.get('/report', function(req,res) {
       if (report && report.toJSON().length != 0){
         res.render('report', { data: report.toJSON(), login: true, name: req.user.nimi });
       } else {
-        res.render('report', { message: "Haulla ei löytynyt raportteja", data: [], login: true, name: req.user.nimi });
+        msg.setMessage("Haulla ei löytynyt raportteja");
+        res.redirect('admin');
       }
     }).catch(function(err){
       console.error(err);
       res.status(500).json({error: err});
     });
   } else {
-    res.render('login', { message: "Ole hyvä ja kirjaudu sisään", login: false});
+    res.render('login', { alertmsg: "Ole hyvä ja kirjaudu sisään", login: false});
   }
 });
 

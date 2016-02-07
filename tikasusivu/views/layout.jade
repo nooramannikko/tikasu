@@ -5,12 +5,12 @@ html
     link(rel='stylesheet', href='/stylesheets/style.css')
     link(rel='stylesheet', href='/stylesheets/pure-min.css')
   body
-    if message
+    if alertmsg
       div#alert
-        a.alert(href="#alert")= message
+        a.alert(href="#alert")= alertmsg
     if notice
-      div#alert2
-        a.alert2(href="#alert")= notice
+      div#notice
+        a.notice(href="#notice")= notice
     div.pure-menu.pure-menu-horizontal
       div.menu-left
         a(href="/").pure-menu-heading.pure-menu-link LippuLasse

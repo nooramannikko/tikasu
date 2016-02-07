@@ -1,5 +1,5 @@
 body {
-    padding: 0px;
+    padding: 0;
     font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
 }
 
@@ -44,11 +44,11 @@ a {
     font: bold 12px/30px sans-serif;
     height: 30px;
     left: 50%;
-    margin-left: -60px;
+    margin-left: -100px;
     position: absolute;
     text-align: center;
     top: 50px;
-    width: 120px;
+    width: 200px;
 }
 #alert:hover:before {
     border-bottom: 10px solid hsla(0,0%,0%,.8);
@@ -113,12 +113,12 @@ a {
     100% { top: 0; }
 }
 
-/* Alert */
+/* Notice */
 
-#alert2 {
+#notice {
   position: relative;
 }
-#alert2:hover:after {
+#notice:hover:after {
   background: hsla(0,0%,0%,.8);
   border-radius: 3px;
   color: #f6f6f6;
@@ -126,13 +126,13 @@ a {
   font: bold 12px/30px sans-serif;
   height: 30px;
   left: 50%;
-  margin-left: -60px;
+  margin-left: -100px;
   position: absolute;
   text-align: center;
   top: 50px;
-  width: 120px;
+  width: 200px;
 }
-#alert2:hover:before {
+#notice:hover:before {
   border-bottom: 10px solid hsla(0,0%,0%,.8);
   border-left: 10px solid transparent;
   border-right: 10px solid transparent;
@@ -144,10 +144,11 @@ a {
   top: 40px;
   width: 0;
 }
-#alert2:target {
+#notice:target {
   display: none;
 }
-.alert2 {
+
+.notice {
   background-color: #0077c5;
   background-size: 20px 20px;
   color: #f6f6f6;
@@ -160,36 +161,36 @@ a {
   top: -45px;
   width: 100%;
   z-index: 10;
-  -webkit-animation: alert 0.5s ease forwards;
-  -moz-animation: alert 0.5s ease forwards;
-  -ms-animation: alert 0.5s ease forwards;
-  -o-animation: alert 0.5s ease forwards;
-  animation: alert 0.5s ease forwards;
+  -webkit-animation: notice 0.5s ease forwards;
+  -moz-animation: notice 0.5s ease forwards;
+  -ms-animation: notice 0.5s ease forwards;
+  -o-animation: notice 0.5s ease forwards;
+  animation: notice 0.5s ease forwards;
 }
 
 /* Animation */
 
-@-webkit-keyframes alert2 {
+@-webkit-keyframes notice {
   0% { opacity: 0; }
   50% { opacity: 0; }
   100% { top: 0; }
 }
-@-moz-keyframes alert2 {
+@-moz-keyframes notice {
   0% { opacity: 0; }
   50% { opacity: 0; }
   100% { top: 0; }
 }
-@-ms-keyframes alert2 {
+@-ms-keyframes notice {
   0% { opacity: 0; }
   50% { opacity: 0; }
   100% { top: 0; }
 }
-@-o-keyframes alert2 {
+@-o-keyframes notice {
   0% { opacity: 0; }
   50% { opacity: 0; }
   100% { top: 0; }
 }
-@keyframes alert2 {
+@keyframes notice {
   0% { opacity: 0; }
   50% { opacity: 0; }
   100% { top: 0; }
