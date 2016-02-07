@@ -12,24 +12,26 @@ html
       div#alert2
         a.alert2(href="#alert")= notice
     div.pure-menu.pure-menu-horizontal
-      a(href="/").pure-menu-heading.pure-menu-link LippuLasse
-      ul.pure-menu-list
+      div.menu-left
+        a(href="/").pure-menu-heading.pure-menu-link LippuLasse
+        ul.pure-menu-list
+          if login
+            li.pure-menu-item
+              a(href="/events").pure-menu-link Tapahtumat
+            li.pure-menu-item
+              a(href="/admin").pure-menu-link Hallinta
+            li.pure-menu-item
+              a(href="/report").pure-menu-link Raportti
+      div.menu-right
         if login
+          ul.pure-menu-list.goRight
+            li.pure-menu-item
+              a(href="#").pure-menu-link= name
+            li.pure-menu-item
+              a(href="/logout").pure-menu-link Uloskirjaus
+        else
           li.pure-menu-item
-            a(href="/events").pure-menu-link Tapahtumat
-          li.pure-menu-item
-            a(href="/admin").pure-menu-link Hallinta
-          li.pure-menu-item
-            a(href="/report").pure-menu-link Raportti
-      if login
-        ul.pure-menu-list.goRight
-          li.pure-menu-item
-            a(href="#").pure-menu-link= name
-          li.pure-menu-item
-            a(href="/logout").pure-menu-link Uloskirjaus
-      else
-        li.pure-menu-item
-          a(href="/login").pure-menu-link Kirjaudu sisään
+            a(href="/login").pure-menu-link Kirjaudu sisään
 
 
 
