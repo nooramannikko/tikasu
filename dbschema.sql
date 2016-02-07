@@ -15,7 +15,7 @@ DROP TABLE IF EXISTS POSTINUMERO;
 -- Postinumerot suomessa ovat 5-merkkiä pitkiä, ja koostuvat vain numeroista
 CREATE TABLE if not exists POSTINUMERO(
     Postinumero CHAR(5) NOT NULL PRIMARY KEY CHECK(Postinumero ~* '^[0-9]{5}'),
-    Postitoimipaikka INTEGER REFERENCES POSTITOIMIPAIKKA (Id)
+    Postitoimipaikka VARCHAR(30) REFERENCES POSTITOIMIPAIKKA (Postitoimipaikka)
             ON DELETE RESTRICT
             ON UPDATE CASCADE
 );
