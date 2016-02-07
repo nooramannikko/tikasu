@@ -2,7 +2,7 @@ extends ../layout
 
 block content
     h3.
-        Uusi tapahtuma
+        Muokkaa tapahtumaa
     form(name="editEvent", action="/saveEvent/"+event.id, method="post", class="pure-form")
         div.input
             spin.label Nimi
@@ -23,7 +23,7 @@ block content
         div.input
                 spin.label Postinumero
                 div.textbox
-                    input(type="text", name="postalCode", value=event.osoite.postinumero)
+                    input(type="text", name="postalCode", value=event.osoite.postinumero.postinumero)
         div.input
             spin.label Postitoimipaikka
             div.textbox

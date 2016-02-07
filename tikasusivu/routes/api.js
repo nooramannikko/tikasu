@@ -56,19 +56,6 @@ router.delete('/tapahtumat/:id', auth.check, function(req,res,next) {
   })
 });
 
-// TODO: Add event
-/*router.post('/tapahtumat/:id', auth.check, function(req,res,next) {
-  var id = req.params['id'];
-  var name = req.body.name; // tapahtuman nimi
-  var category = req.body.category; // tapahtuman kategoria
-  var ALV = req.body.alv; // tapahtuman ALV
-  var startTime = req.body.startTime; // tapahtuman alkuaika
-  var endTime = req.body.endTime; // tapahtuman loppuaika
-  var address = req.body.address; // tapahtuman osoite
-  var zipCode = req.body.zipCode; // tapahtuman postinumero.js
-  // tapahtuman id ja vastuuhenkilö automaattisesti
-});*/
-
 router.get('/tapahtumanjarjestaja', auth.check, function(req,res,next) {
   Tapahtumanjarjestaja.fetchAll({withRelated: ['osoiteobj']}).then(function (organizers) {
     if (organizers){
