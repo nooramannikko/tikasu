@@ -95,15 +95,16 @@ router.post('/events', function(req,res){
           transaction: t
         });
       }).then(function (address) {
-        return Tapahtuma.forge({
-          nimi: req.body.eventName,
+        return Tapahtuma.upsert({
+          eventName: req.body.eventName,
           alv: req.body.alv,
-          alkuaika: req.body.startTime,
-          loppuaika: req.body.endTime,
-          vastuuhenkilo: req.body.vhlo,
-          kategoria: req.body.category,
-          osoiteid: address.attributes.id
-        }).save(null, {transacting: t});
+          startTime: req.body.startTime,
+          endTime: req.body.endTime,
+          vhlo: req.body.vhlo,
+          category: req.body.category,
+          addressId: address.attributes.id,
+          transaction: t
+        });
       })
     }).then(function (event) {
       // Transaction complete, render page

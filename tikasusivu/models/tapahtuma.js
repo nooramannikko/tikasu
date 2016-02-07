@@ -17,4 +17,34 @@ var Tapahtuma = Bookshelf.Model.extend({
 
 });
 
+
+// TODO: For event updates, not tested nor used right now
+Tapahtuma.upsert = function (data) {
+  return Tapahtuma.where({
+    id: data.id
+  }).fetch().then(function (event) {
+    if (!event) {
+      return Tapahtuma.forge({
+        nimi: data.eventName,
+        alv: data.alv,
+        alkuaika: data.startTime,
+        loppuaika: data.endTime,
+        vastuuhenkilo: data.vhlo,
+        kategoria: data.category,
+        osoiteid: data.addressId
+      }).save(null, {method: 'insert', transacting: data.transaction});
+    } else {
+      return event.save({
+        nimi: data.eventName,
+        alv: data.alv,
+        alkuaika: data.startTime,
+        loppuaika: data.endTime,
+        vastuuhenkilo: data.vhlo,
+        kategoria: data.category,
+        osoiteid: data.addressId
+      }, {method: 'update', transacting: data.transaction});
+    }
+  });
+}
+
 module.exports = Bookshelf.model('Tapahtuma', Tapahtuma);
