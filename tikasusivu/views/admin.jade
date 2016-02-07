@@ -32,106 +32,128 @@ block content
                 td
                     span.
                         #{data.tapahtumanjarjestaja.osoite.postinumero}
+    div(class="pure-g")
+        div(class="pure-u-1-2")
+            h3.
+                Uusi tapahtuma
+            form(name="newEvent", action="/events" method="post" class="pure-form")
+                div.input
+                    spin.label Nimi
+                    div.textbox
+                        input(type="text", name="eventName")
+                div.input
+                    spin.label Alkuaika
+                    div.textbox
+                        input(type="datetime-local", name="startTime" placeholder="HH:MM ddmmyyy")
+                div.input
+                    spin.label Loppuaika
+                    div.textbox
+                        input(type="datetime-local", name="endTime" placeholder="HH:MM ddmmyyy")
+                div.input
+                    spin.label Osoite
+                    div.textbox
+                        input(type="text", name="address")
+                div.input
+                    spin.label Postinumero
+                    div.textbox
+                        input(type="text", name="postalCode")
+                div.input
+                    spin.label Postitoimipaikka
+                    div.textbox
+                        input(type="text", name="postalArea")
+                div.input
+                    spin.label Kategoria
+                    div.dropdown
+                        select(name="category")
+                            option(value='')
+                            each cat in categories
+                                option(selected=cat.id == 1, value=cat.id) #{cat.nimi}
+                div.input
+                    spin.label ALV-%
+                    div.textbox
+                        input(type="text", name="alv")
+                div.input
+                    spin.label Vastuuhenkilö
+                    div.dropdown
+                        select(name="vhlo")
+                            option(value='')
+                            each vhlo in vhlos
+                                option(selected=vhlo.tunnus == username, value=vhlo.id) #{vhlo.tunnus}
+                div.actions
+                    input(type="submit", value="Luo tapahtuma", class="pure-button")
 
-    h3.
-        Uusi tapahtuma
-    form(name="newEvent", action="/events" method="post" class="pure-form")
-        div.input
-            spin.label Nimi
-            div.textbox
-                input(type="text", name="eventName")
-        div.input
-            spin.label Alkuaika
-            div.textbox
-                input(type="datetime-local", name="startTime" placeholder="HH:MM ddmmyyy")
-        div.input
-            spin.label Loppuaika
-            div.textbox
-                input(type="datetime-local", name="endTime" placeholder="HH:MM ddmmyyy")
-        div.input
-            spin.label Osoite
-            div.textbox
-                input(type="text", name="address")
-        div.input
-            spin.label Postinumero
-            div.textbox
-                input(type="text", name="postalCode")
-        div.input
-            spin.label Postitoimipaikka
-            div.textbox
-                input(type="text", name="postalArea")
-        div.input
-            spin.label Kategoria
-            div.dropdown
-                select(name="category")
-                    option(value='')
-                    each cat in categories
-                        option(selected=cat.id == 1, value=cat.id) #{cat.nimi}
-        div.input
-            spin.label ALV-%
-            div.textbox
-                input(type="text", name="alv")
-        div.input
-            spin.label Vastuuhenkilö
-            div.dropdown
-                select(name="vhlo")
-                    option(value='')
-                    each vhlo in vhlos
-                        option(selected=vhlo.tunnus == username, value=vhlo.id) #{vhlo.tunnus}
-        div.actions
-            input(type="submit", value="Luo tapahtuma", class="pure-button")
+        div(class="pure-u-1-2")
+            h3.
+                Luo raportti
+            form(name="newReport", action="/report" method="get" class="pure-form")
+                div.input
+                    spin.label Alkuaika
+                    div.textbox
+                        input(type="datetime-local", name="startTime" placeholder="HH:MM ddmmyyy")
+                div.input
+                    spin.label Loppuaika
+                    div.textbox
+                        input(type="datetime-local", name="endTime" placeholder="HH:MM ddmmyyy")
+                div.input
+                    spin.label Kategoria
+                    div.dropdown
+                        select(name="category")
+                            option(value='')
+                            each cat in categories
+                                option(selected=cat.id == 1, value=cat.id) #{cat.nimi}
+                div.actions
+                    input(type="submit", value="Luo raportti", class="pure-button")
 
-
-
-    h3.
-        Tapahtumat
-    table(class="pure-table")
-        thead
-            tr
-                th
-                    span.
-                        Tapahtuma
-                th
-                    span.
-                        Alkuaika
-                th
-                    span.
-                        Loppuaika
-                th
-                    span.
-                        Kategoria
-                th
-                    span.
-                        Osoite
-                th
-                    span.
-                        Ostetut liput (kpl)
-                th
-                    span.
-                        Toiminnot
-        tbody
-            each event in events
-                tr
-                    td
-                        span.
-                            #{event.nimi}
-                    td
-                        span.
-                            #{event.alkuaika}
-                    td
-                        span.
-                            #{event.loppuaika}
-                    td
-                        span.
-                            #{event.kategoria}
-                    td
-                        span.
-                            #{event.osoite}
-                    td
-                        span.
-                            #{event.liput}
-                    td
-                        form(name="delete" method="post" action="/deleteEvent/"+event.id)
-                            button(type="submit") Poista
-                        form(name="edit" method="get" action="/editEvent/"+event.id)
-                            button(type="submit") Muokkaa
+        div(class="pure-u-1")
+            h3.
+                Tapahtumat
+            table(class="pure-table")
+                thead
+                    tr
+                        th
+                            span.
+                                Tapahtuma
+                        th
+                            span.
+                                Alkuaika
+                        th
+                            span.
+                                Loppuaika
+                        th
+                            span.
+                                Kategoria
+                        th
+                            span.
+                                Osoite
+                        th
+                            span.
+                                Ostetut liput (kpl)
+                        th
+                            span.
+                                Toiminnot
+                tbody
+                    each event in events
+                        tr
+                            td
+                                span.
+                                    #{event.nimi}
+                            td
+                                span.
+                                    #{event.alkuaika}
+                            td
+                                span.
+                                    #{event.loppuaika}
+                            td
+                                span.
+                                    #{event.kategoria}
+                            td
+                                span.
+                                    #{event.osoite}
+                            td
+                                span.
+                                    #{event.liput}
+                            td
+                                form(name="delete" method="post" action="/deleteEvent/"+event.id)
+                                    button(type="submit") Poista
+                                form(name="edit" method="get" action="/editEvent/"+event.id)
+                                    button(type="submit") Muokkaa

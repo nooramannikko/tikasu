@@ -29,6 +29,7 @@ SELECT
 	TAPAHTUMA.Loppuaika,
 	TAPAHTUMA.Vastuuhenkilo,
 	KATEGORIA.Nimi AS Kategoria,
+	KATEGORIA.Id AS KategoriaId,
 	OSOITE.Postiosoite,
 	POSTINUMERO.Postinumero,
 	POSTINUMERO.Postitoimipaikka,

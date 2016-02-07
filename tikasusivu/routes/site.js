@@ -291,7 +291,16 @@ router.get('/admin', function(req,res) {
 /*GET report panel*/
 router.get('/report', function(req,res) {
   if (req.user){
-    Raportti.fetchAll().then(function (report) {
+    // TODO: Validate inputs
+    console.log("Got parameteres");
+    console.log(req.query);
+
+    var dbQuery = {};
+    req.query.category ? dbQuery.kategoria = parseInt(req.query.category) : null;
+    req.query.startTime ? dbQuery.alkuaika = req.query.startTime : null;
+    req.query.endTime ? dbQuery.loppuaika = req.query.endTime : null;
+
+    Raportti.where({vastuuhenkilo: req.user.id}).where(dbQuery).fetchAll().then(function (report) {
       if (report){
         console.log(report.toJSON());
         res.render('report', { data: report.toJSON(), login: true, name: req.user.nimi });
