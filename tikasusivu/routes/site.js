@@ -138,6 +138,7 @@ router.post('/deleteEvent/:id', function(req, res){
   }
 });
 
+/*GET editEvent panel*/
 router.get('/editEvent/:id', function(req,res){
   console.log("edit");
   if (req.user){
@@ -164,12 +165,13 @@ router.get('/editEvent/:id', function(req,res){
   }
 });
 
-router.post('/saveEvent/:id', function(req, res){
-  if(req.user){
-    console.log("Updating new event:");
+
+router.post('/saveEvent/:id', function(req, res) {
+  if(req.user) {
+    console.log("Modifying event:");
+    console.log(req.user);
     console.log(req.body);
     var id = req.params['id'];
-    console.log(id);
     // Transaction that will either complete or rollback
     // Postitoimipaikka, Postinumero and Osoite are inserted only if they don't exist already
     Bookshelf.transaction(function(t) {
@@ -195,7 +197,7 @@ router.post('/saveEvent/:id', function(req, res){
           alv: req.body.alv,
           startTime: req.body.startTime,
           endTime: req.body.endTime,
-          vhlo: req.body.vhlo,
+          vhlo: req.user.id,
           category: req.body.category,
           addressId: address.attributes.id,
           transaction: t
@@ -207,7 +209,6 @@ router.post('/saveEvent/:id', function(req, res){
     }).catch(function (err){
       res.status(400).json({error: err});
     });
-
   } else {
     res.render('login', { message: "Ole hyvä ja kirjaudu sisään", login: false});
   }

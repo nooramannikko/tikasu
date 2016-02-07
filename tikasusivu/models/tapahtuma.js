@@ -20,7 +20,7 @@ var Tapahtuma = Bookshelf.Model.extend({
 
 // TODO: For event updates, not tested nor used right now
 Tapahtuma.upsert = function (data) {
-  return Tapahtuma.where({
+  return Tapahtuma.forge({
     id: data.id
   }).fetch().then(function (event) {
     if (!event) {
