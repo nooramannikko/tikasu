@@ -138,6 +138,7 @@ router.post('/deleteEvent/:id', function(req, res){
   }
 });
 
+/*GET editEvent panel*/
 router.get('/editEvent/:id', function(req,res){
   console.log("edit");
   if (req.user){
@@ -160,6 +161,54 @@ router.get('/editEvent/:id', function(req,res){
       res.status(500).json({error: err});
     })
   } else {
+    res.render('login', { message: "Ole hyvä ja kirjaudu sisään", login: false});
+  }
+});
+
+router.post('/saveEvent/:id', function(req, res) {
+  if(req.user) {
+    console.log("Modifying event:");
+    console.log(req.body);
+    var id = req.params['id'];
+    // Transaction that will either complete or rollback
+    // Postitoimipaikka, Postinumero and Osoite are inserted only if they don't exist already
+    Bookshelf.transaction(function(t) {
+      return Postitoimipaikka.upsert({
+        postalArea: req.body.postalArea,
+        transaction: t
+      }).then(function (area) {
+        return Postinumero.upsert({
+          postalCode: req.body.postalCode,
+          postalArea: area.attributes.postitoimipaikka,
+          transaction: t
+        });
+      }).then(function (code) {
+        return Osoite.upsert({
+          address: req.body.address,
+          code: code.attributes.postinumero,
+          transaction: t
+        });
+      }).then(function (address) {
+        return Tapahtuma.upsert({
+          id: id,
+          eventName: req.body.eventName,
+          alv: req.body.alv,
+          startTime: req.body.startTime,
+          endTime: req.body.endTime,
+          vhlo: req.body.vhlo,
+          category: req.body.category,
+          addressId: address.attributes.id,
+          transaction: t
+        });
+      })
+    }).then(function (event) {
+      // Transaction complete, render page
+      res.redirect(req.get('referer'));
+    }).catch(function (err){
+      res.status(400).json({error: err});
+    });
+  }
+  else {
     res.render('login', { message: "Ole hyvä ja kirjaudu sisään", login: false});
   }
 });

@@ -21,9 +21,13 @@ block content
             div.textbox
                 input(type="text", name="address", value=event.osoite.postiosoite)
         div.input
-            spin.label Postinumero
+                spin.label Postinumero
+                div.textbox
+                    input(type="text", name="postalCode", value=event.osoite.postinumero)
+        div.input
+            spin.label Postitoimipaikka
             div.textbox
-                input(type="text", name="postalCode", value=event.osoite.postinumero)
+                input(type="text", name="postalArea", value=event.osoite.postinumero.postitoimipaikka)
         div.input
             spin.label Kategoria
             div.dropdown
