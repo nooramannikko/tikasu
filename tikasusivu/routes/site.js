@@ -173,21 +173,21 @@ router.get('/admin', function(req,res) {
         Vastuuhenkilo.where({tapahtumanjarjestaja: vhlo.attributes.tapahtumanjarjestaja}).fetchAll().then(function (vhlos) {
           if (vhlos) {
             //console.log(vhlos.toJSON());
+            // TODO: This loop should complete before calling Tapahtuma.where, might cause problems with async
             var vhloIds = [];
             vhlos.forEach(function(hlo) {
               vhloIds.push(hlo.attributes.id)
             });
             Tapahtuma.where('vastuuhenkilo', 'IN', vhloIds).fetchAll({withRelated: ['kategoria', 'osoite']}).then(function (events) {
               if (events){
-                var eventsIds = [];
                 var eventsJson = events.toJSON();
                 console.log(eventsJson);
 
                 // Get tickets for events
                 var eventList = [];
 
-                eventsJson.forEach(function (event) {
-                  Lippu.where({tapahtuma: event.id, tila: 1}).fetchAll().then(function (tickets) {
+                Promise.all(eventsJson.map(function(event) {
+                  return Lippu.where({tapahtuma: event.id, tila: 1}).fetchAll().then(function (tickets) {
                     eventList.push({
                       id: event.id,
                       nimi: event.nimi,
@@ -197,23 +197,25 @@ router.get('/admin', function(req,res) {
                       kategoria: event.kategoria.nimi,
                       liput: tickets.length
                     });
+                    console.log("pushing event");
                   });
-                });
-
-                // Get all categories
-                Kategoria.fetchAll().then(function (categories) {
-                  if (categories){
-                    res.render('admin', {
-                      data: vhlo.toJSON(),
-                      events: eventList,
-                      categories: categories.toJSON(),
-                      vhlos: vhlos.toJSON(),
-                      username: req.user.tunnus,
-                      login: true, name: req.user.nimi
-                    });
-                  } else {
-                    res.status(404).json({error: 'CategoryNotFound'})
-                  }
+                })).then(function(){
+                  // Get all categories
+                  console.log("categories time");
+                  Kategoria.fetchAll().then(function (categories) {
+                    if (categories){
+                      res.render('admin', {
+                        data: vhlo.toJSON(),
+                        events: eventList,
+                        categories: categories.toJSON(),
+                        vhlos: vhlos.toJSON(),
+                        username: req.user.tunnus,
+                        login: true, name: req.user.nimi
+                      });
+                    } else {
+                      res.status(404).json({error: 'CategoryNotFound'})
+                    }
+                  });
                 });
               } else {
                 res.status(404).json({error: 'EventNotFound'})
