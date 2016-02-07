@@ -296,7 +296,7 @@ router.get('/report', function(req,res) {
     console.log(req.query);
 
     var dbQuery = {};
-    req.query.category ? dbQuery.kategoria = parseInt(req.query.category) : null;
+    req.query.category ? dbQuery.kategoriaid = parseInt(req.query.category) : null;
     req.query.startTime ? dbQuery.alkuaika = req.query.startTime : null;
     req.query.endTime ? dbQuery.loppuaika = req.query.endTime : null;
 

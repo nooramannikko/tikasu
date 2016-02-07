@@ -80,11 +80,13 @@ block content
                             each vhlo in vhlos
                                 option(selected=vhlo.tunnus == username, value=vhlo.id) #{vhlo.tunnus}
                 div.actions
-                    input(type="submit", value="Luo tapahtuma", class="pure-button")
+                    input(type="submit", value="Luo tapahtuma", class="pure-button pure-button-primary")
 
         div(class="pure-u-1-2")
             h3.
                 Luo raportti
+            h4.
+                Rajaa tapahtumia
             form(name="newReport", action="/report" method="get" class="pure-form")
                 div.input
                     spin.label Alkuaika
@@ -100,13 +102,13 @@ block content
                         select(name="category")
                             option(value='')
                             each cat in categories
-                                option(selected=cat.id == 1, value=cat.id) #{cat.nimi}
+                                option(selected=cat.id == null, value=cat.id) #{cat.nimi}
                 div.actions
-                    input(type="submit", value="Luo raportti", class="pure-button")
+                    input(type="submit", value="Luo raportti", class="pure-button pure-button-primary")
 
         div(class="pure-u-1")
             h3.
-                Tapahtumat
+                Omat tapahtumat
             table(class="pure-table")
                 thead
                     tr

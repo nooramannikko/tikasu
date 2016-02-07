@@ -1,6 +1,6 @@
 body {
-  padding: 0px;
-  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+    padding: 0px;
+    font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
 }
 
 a {
@@ -21,15 +21,16 @@ a {
 }
 
 .content {
-  padding-top: 50px;
-  padding-left: 30px;
-  padding-right: 30px;
+    padding: 50px 30px 30px;
 }
 
-.goRight {
+.menu-left {
+  float: left;
+}
+
+.menu-right {
   float: right;
 }
-
 /* Alert */
 
 #alert {
