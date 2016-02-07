@@ -291,26 +291,27 @@ router.get('/admin', function(req,res) {
 /*GET report panel*/
 router.get('/report', function(req,res) {
   if (req.user){
-    // TODO: Validate inputs
+    // TODO: Validate inputs, like now kategoriaid might be NaN
     console.log("Got parameteres");
     console.log(req.query);
 
-    var dbQuery = {};
-    req.query.category ? dbQuery.kategoriaid = parseInt(req.query.category) : null;
-    req.query.startTime ? dbQuery.alkuaika = req.query.startTime : null;
-    req.query.endTime ? dbQuery.loppuaika = req.query.endTime : null;
-
-    Raportti.where({vastuuhenkilo: req.user.id}).where(dbQuery).fetchAll().then(function (report) {
-      if (report){
-        console.log(report.toJSON());
+    // Filter reports conditionally
+    // This could probably be done in nicer way with lodash filter
+    var reportQuery = Raportti.where({vastuuhenkilo: req.user.id});
+    req.query.category ? reportQuery = reportQuery.where('kategoriaid', parseInt(req.query.category)) : null;
+    req.query.startTime ? reportQuery = reportQuery.where('alkuaika', '>=', req.query.startTime) : null;
+    req.query.endTime ? reportQuery = reportQuery.where('loppuaika', '<=', req.query.endTime) : null;
+z
+    reportQuery.fetchAll().then(function (report) {
+      if (report && report.toJSON().length != 0){
         res.render('report', { data: report.toJSON(), login: true, name: req.user.nimi });
       } else {
-        res.status(404).json({error: 'ReportNotFound'})
+        res.render('report', { message: "Haulla ei löytynyt raportteja", data: [], login: true, name: req.user.nimi });
       }
     }).catch(function(err){
       console.error(err);
       res.status(500).json({error: err});
-    })
+    });
   } else {
     res.render('login', { message: "Ole hyvä ja kirjaudu sisään", login: false});
   }
