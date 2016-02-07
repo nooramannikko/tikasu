@@ -28,7 +28,7 @@ SELECT
 	TAPAHTUMA.Alkuaika,
 	TAPAHTUMA.Loppuaika,
 	TAPAHTUMA.Vastuuhenkilo,
-	KATEGORIA.Nimi,
+	KATEGORIA.Nimi AS Kategoria,
 	OSOITE.Postiosoite,
 	POSTINUMERO.Postinumero,
 	POSTINUMERO.Postitoimipaikka,
