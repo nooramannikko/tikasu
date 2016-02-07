@@ -6,6 +6,7 @@ var Lippu = require('../models/lippu');
 var Tapahtuma = require('../models/tapahtuma');
 var Kategoria = require('../models/kategoria');
 var Tapahtumanjarjestaja = require('../models/tapahtumanjarjestaja');
+var Raportti = require('../models/raportti');
 
 router.get('/', auth.check, function(req, res, next) {
   res.send("Tässä api dokumentaatio ehkä mahollisesti");
@@ -83,5 +84,19 @@ router.get('/tapahtumanjarjestaja/:id', auth.check, function(req,res,next) {
     res.status(500).json({error: err});
   })
 });
+
+router.get('/raportti', auth.check, function(req,res,next) {
+  Raportti.fetchAll().then(function (report) {
+    if (report){
+      res.send(report.toJSON());
+    } else {
+      res.status(404).json({error: 'ReportNotFound'})
+    }
+  }).catch(function(err){
+    console.error(err);
+    res.status(500).json({error: err});
+  })
+});
+
 
 module.exports = router;

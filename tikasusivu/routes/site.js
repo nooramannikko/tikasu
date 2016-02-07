@@ -287,4 +287,22 @@ router.get('/admin', function(req,res) {
   }
 });
 
+/*GET report panel*/
+router.get('/report', function(req,res) {
+  if (req.user){
+    Raportti.fetchAll().then(function (report) {
+      if (report){
+        res.render('report', { data: report, login: true, name: req.user.nimi });
+      } else {
+        res.status(404).json({error: 'ReportNotFound'})
+      }
+    }).catch(function(err){
+      console.error(err);
+      res.status(500).json({error: err});
+    })
+  } else {
+    res.render('login', { message: "Ole hyvä ja kirjaudu sisään", login: false});
+  }
+});
+
 module.exports = router;

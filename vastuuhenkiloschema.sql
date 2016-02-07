@@ -21,8 +21,17 @@ GRANT SELECT, INSERT, UPDATE, DELETE ON HINTATARJOUSLIPPU TO vastuuhenkilo;
 -- For ticket sale report generation RAPORTTI view is created
 -- More views can be created as needed (Like maybe a view for easy ticket printing containing both event name and place info)
 CREATE VIEW RAPORTTI AS
-SELECT 
-	TAPAHTUMA.*,
+SELECT
+    TAPAHTUMA.Id,
+	TAPAHTUMA.Nimi,
+	TAPAHTUMA.Alv,
+	TAPAHTUMA.Alkuaika,
+	TAPAHTUMA.Loppuaika,
+	TAPAHTUMA.Vastuuhenkilo,
+	KATEGORIA.Nimi,
+	OSOITE.Postiosoite,
+	POSTINUMERO.Postinumero,
+	POSTINUMERO.Postitoimipaikka,
 	AVG(LIPPU.HINTA) AS VerotonKeskihinta,
 	COUNT(LIPPU) AS Yleisomaara,
 	SUM(LIPPU.HINTA) AS MyyntiVeroton,
@@ -32,6 +41,15 @@ FROM TAPAHTUMA
 	LEFT OUTER JOIN LIPPU ON (
 		TAPAHTUMA.Id = LIPPU.Tapahtuma AND
 		LIPPU.Tila = 1 -- "Sold"
+	)
+	LEFT OUTER JOIN KATEGORIA ON (
+	    TAPAHTUMA.Kategoria = KATEGORIA.Id
+	)
+	LEFT OUTER JOIN OSOITE ON (
+	    TAPAHTUMA.Osoiteid = Osoite.Id
+	)
+	LEFT OUTER JOIN POSTINUMERO ON (
+	    OSOITE.Postinumero = POSTINUMERO.Postinumero
 	)
 GROUP BY TAPAHTUMA.Id;
 

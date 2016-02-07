@@ -1,0 +1,36 @@
+extends layout
+
+block content
+    h1.
+        #{title}
+    table(class="pure-table")
+        thead
+            tr
+                th
+                    span.
+                        Tapahtuma
+                th
+                    span.
+                        Alkuaika
+                th
+                    span.
+                        Loppuaika
+                th
+                    span.
+                        Kategoria
+                th
+                    span.
+                        Vastuuhenkilö
+                th
+                    span.
+                        Osoite
+                th
+                    span.
+                        Postinumero
+                th
+                    span.
+                        Alv
+        tbody
+            each report in data
+
+
