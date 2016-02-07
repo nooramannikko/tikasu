@@ -1,7 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var passport = require('passport');
-
+var moment = require('moment');
 var Bookshelf = require('../database');
 var Lippu = require('../models/lippu');
 var Tapahtuma = require('../models/tapahtuma');
@@ -52,12 +52,32 @@ router.get('/login', function(req,res) {
 /* GET event listing */
 router.get('/events', function(req, res){
   if(req.user) {
-    Tapahtuma.fetchAll({withRelated: ['kategoria', 'osoite']}).then(function (events) {
+    Tapahtuma.fetchAll({withRelated: ['kategoria', 'osoite', 'vastuuhenkilo']}).then(function (events) {
       if (events){
-        console.log(events.toJSON());
-        res.render('event/index', {events: events.toJSON(), login: true, name: req.user.nimi});
+        var eventsJson = events.toJSON();
+        console.log(eventsJson);
+
+        // Get tickets for events
+        var eventList = [];
+
+        eventsJson.map(function(event) {
+          var alvToimiNyt = event.alv;
+          eventList.push({
+              id: event.id,
+              nimi: event.nimi,
+              alkuaika: moment(event.alkuaika).format("DD.MM.YYYY HH:mm"),
+              loppuaika: moment(event.loppuaika).format("DD.MM.YYYY HH:mm"),
+              osoite: event.osoite.postiosoite + ', ' + event.osoite.postinumero,
+              vastuuhenkilo: event.vastuuhenkilo.nimi,
+              kategoria: event.kategoria.nimi,
+              alv: alvToimiNyt
+          });
+        });
+        console.log("categories time");
+        res.render('event/index', {events: eventList, login: true, name: req.user.nimi});
+
       } else {
-        res.status(404).json({error: 'EventNotFound'})
+        res.render('event/index', {events: {}, login: true, name: req.user.nimi, notice: "Tapahtumia ei löytynyt"});
       }
     }).catch(function(err){
       console.error(err);
@@ -146,8 +166,8 @@ router.get('/editEvent/:id', function(req,res){
     var id = req.params['id'];
     Tapahtuma.where({id: id}).fetch({withRelated: ['kategoria', 'osoite', 'osoite.postinumero']}).then(function (event) {
       if (event){
-        var startTime = event.attributes.alkuaika.getFullYear() +  "-" + ("0"+(event.attributes.alkuaika.getMonth()+1)).slice(-2) + "-" + ("0"+event.attributes.alkuaika.getDate()).slice(-2) + "T" + ("0"+event.attributes.alkuaika.getHours()).slice(-2) + ":" + ("0"+event.attributes.alkuaika.getMinutes()).slice(-2);
-        var endTime = event.attributes.alkuaika.getFullYear() +  "-" + ("0"+(event.attributes.loppuaika.getMonth()+1)).slice(-2) + "-" + ("0"+event.attributes.loppuaika.getDate()).slice(-2) + "T" + ("0"+event.attributes.loppuaika.getHours()).slice(-2) + ":" + ("0"+event.attributes.loppuaika.getMinutes()).slice(-2);
+        var startTime = moment(event.attributes.alkuaika).format("YYYY-MM-DDTHH:mm");
+        var endTime = moment(event.attributes.loppuaika).format("YYYY-MM-DDTHH:mm");
         Kategoria.fetchAll().then(function (categories) {
           if (categories) {
             res.render('event/edit', {event: event.toJSON(), categories: categories.toJSON(), username: req.user.tunnus, userid: req.user.id, startTime: startTime, endTime: endTime, login: true, name: req.user.nimi});
@@ -206,7 +226,7 @@ router.post('/saveEvent/:id', function(req, res) {
       })
     }).then(function (event) {
       // Transaction complete, render page
-      res.redirect(req.get('referer'));
+      res.redirect('../admin');
     }).catch(function (err){
       res.status(400).json({error: err});
     });
@@ -242,8 +262,8 @@ router.get('/admin', function(req,res) {
                     eventList.push({
                       id: event.id,
                       nimi: event.nimi,
-                      alkuaika: event.alkuaika,
-                      loppuaika: event.loppuaika,
+                      alkuaika: moment(event.alkuaika).format("DD.MM.YYYY HH:mm"),
+                      loppuaika: moment(event.loppuaika).format("DD.MM.YYYY HH:mm"),
                       osoite: event.osoite.postiosoite + ', ' + event.osoite.postinumero,
                       kategoria: event.kategoria.nimi,
                       liput: tickets.length
@@ -301,7 +321,6 @@ router.get('/report', function(req,res) {
     req.query.category ? reportQuery = reportQuery.where('kategoriaid', parseInt(req.query.category)) : null;
     req.query.startTime ? reportQuery = reportQuery.where('alkuaika', '>=', req.query.startTime) : null;
     req.query.endTime ? reportQuery = reportQuery.where('loppuaika', '<=', req.query.endTime) : null;
-
     reportQuery.fetchAll().then(function (report) {
       if (report && report.toJSON().length != 0){
         res.render('report', { data: report.toJSON(), login: true, name: req.user.nimi });

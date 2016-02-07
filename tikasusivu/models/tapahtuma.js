@@ -13,6 +13,10 @@ var Tapahtuma = Bookshelf.Model.extend({
 
   osoite: function() {
     return this.belongsTo('Osoite', 'osoiteid');
+  },
+
+  vastuuhenkilo: function() {
+    return this.belongsTo('Vastuuhenkilo', 'vastuuhenkilo')
   }
 
 });

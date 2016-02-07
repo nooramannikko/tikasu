@@ -8,6 +8,10 @@ var Vastuuhenkilo = Bookshelf.Model.extend({
 
   tapahtumanjarjestaja: function() {
     return this.belongsTo('Tapahtumanjarjestaja', 'tapahtumanjarjestaja');
+  },
+
+  tapahtuma: function (){
+    return this.hasMany('Tapahtuma', 'vastuuhenkilo');
   }
 });
 

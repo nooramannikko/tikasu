@@ -26,9 +26,6 @@ block content
                         Osoite
                 th
                     span.
-                        Postinumero
-                th
-                    span.
                         Alv
         tbody 
             each event in events
@@ -44,19 +41,16 @@ block content
                             #{event.loppuaika}
                     td
                         span.
-                            #{event.kategoria.nimi}
+                            #{event.kategoria}
                     td
                         span.
                             #{event.vastuuhenkilo}
                     td
                         span.
-                            #{event.osoite.postiosoite}
+                            #{event.osoite}
                     td
                         span.
-                            #{event.osoite.postinumero}
-                    td
-                        span
-                            #{event.alv}
+                            #{event.alv} %
 
 
 
