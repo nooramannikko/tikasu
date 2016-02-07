@@ -1,7 +1,6 @@
 var express = require('express');
 var router = express.Router();
 var passport = require('passport');
-var auth = require('../auth');
 
 var Bookshelf = require('../database');
 var Lippu = require('../models/lippu');
@@ -12,37 +11,6 @@ var Vastuuhenkilo = require('../models/vastuuhenkilo');
 var Kategoria = require('../models/kategoria');
 var Postinumero = require('../models/postinumero');
 var Postitoimipaikka = require('../models/postitoimipaikka');
-
-var postinumeroCreate = function (data) {
-  return new Postinumero({
-    postinumero: data.postalCode
-  }).save({postitoimipaikka: data.postalArea});
-};
-
-var postitoimipaikkaCreate = function (data) {
-  return new Postitoimipaikka({
-    postitoimipaikka: data.postalArea
-  }).save();
-};
-
-var osoiteCreate = function (data) {
-  return Osoite.forge({
-    postiosoite: data.address,
-    postinumero: data.codeId
-  }).save();
-};
-
-var tapahtumaCreate = function(data) {
-  return Tapahtuma.forge({
-    nimi: data.eventName,
-    alv: parseInt(data.alv),
-    alkuaika: data.startTime,
-    loppuaika: data.endTime,
-    vastuuhenkilo: data.vhlo,
-    kategoria: data.category,
-    osoiteid: data.addressId
-  }).save();
-};
 
 function logout(req, res){
   req.logout();
@@ -102,29 +70,46 @@ router.get('/events', function(req, res){
 });
 
 /* POST new event*/
+// TODO: Validate req.body has correct data, this isn't checked now
 router.post('/events', function(req,res){
   if(req.user) {
     console.log("Creating new event:");
     console.log(req.body);
-    postitoimipaikkaCreate({postalArea: req.body.postalArea}).then(function(area) {
-      console.log(area);
-      postinumeroCreate({postalCode: req.body.postalCode, postalAreaId: area.attributes.id}).then(function (code) {
-        console.log(code);
-        osoiteCreate({address: req.body.address, codeId: code.attributes.id}).then(function (address) {
-          console.log(address);
-          tapahtumaCreate({
-            eventName: req.body.eventName,
-            alv: req.body.alv,
-            startTime: req.body.startTime,
-            endTime: req.body.endTime,
-            vhlo: req.body.vhlo,
-            category: req.body.category,
-            addressId: address.attributes.id
-          }).then(function () {
-            res.redirect(req.get('referer'));
-          });
+
+    // Transaction that will either complete or rollback
+    // Postitoimipaikka, Postinumero and Osoite are inserted only if they don't exist already
+    Bookshelf.transaction(function(t) {
+      return Postitoimipaikka.upsert({
+        postalArea: req.body.postalArea,
+        transaction: t
+      }).then(function (area) {
+        return Postinumero.upsert({
+          postalCode: req.body.postalCode,
+          postalArea: area.attributes.postitoimipaikka,
+          transaction: t
         });
-      });
+      }).then(function (code) {
+        return Osoite.upsert({
+          address: req.body.address,
+          code: code.attributes.postinumero,
+          transaction: t
+        });
+      }).then(function (address) {
+        return Tapahtuma.forge({
+          nimi: req.body.eventName,
+          alv: req.body.alv,
+          alkuaika: req.body.startTime,
+          loppuaika: req.body.endTime,
+          vastuuhenkilo: req.body.vhlo,
+          kategoria: req.body.category,
+          osoiteid: address.attributes.id
+        }).save(null, {transacting: t});
+      })
+    }).then(function (event) {
+      // Transaction complete, render page
+      res.redirect(req.get('referer'));
+    }).catch(function (err){
+      res.status(400).json({error: err});
     });
   }
   else {
@@ -196,14 +181,12 @@ router.get('/admin', function(req,res) {
                 var eventsIds = [];
                 var eventsJson = events.toJSON();
                 console.log(eventsJson);
-                eventsJson.forEach(function(event) {
-                  eventsIds.push(event.id)
-                });
+
                 // Get tickets for events
-                // How to make query with tapahtuma IN evenIds AND tila = 1 ??
-                Lippu.where('tapahtuma', 'IN', eventsIds).where('tila', 1).fetchAll().then(function (tickets) {
-                  var eventList = [];
-                  eventsJson.forEach(function(event) {
+                var eventList = [];
+
+                eventsJson.forEach(function (event) {
+                  Lippu.where({tapahtuma: event.id, tila: 1}).fetchAll().then(function (tickets) {
                     eventList.push({
                       id: event.id,
                       nimi: event.nimi,
@@ -214,15 +197,22 @@ router.get('/admin', function(req,res) {
                       liput: tickets.length
                     });
                   });
-                  // Get all categories
-                  Kategoria.fetchAll().then(function (categories) {
-                    if (categories){
-                      res.render('admin', {data: vhlo.toJSON(), events: eventList, categories: categories.toJSON(), vhlos: vhlos.toJSON(), username: req.user.tunnus, login: true, name: req.user.nimi});
-                    } else {
-                      res.status(404).json({error: 'CategoryNotFound'})
-                    }
-                  });
-                    //res.render('admin', {data: vhlo.toJSON(), events: eventList, login: true, name: req.user.nimi});
+                });
+
+                // Get all categories
+                Kategoria.fetchAll().then(function (categories) {
+                  if (categories){
+                    res.render('admin', {
+                      data: vhlo.toJSON(),
+                      events: eventList,
+                      categories: categories.toJSON(),
+                      vhlos: vhlos.toJSON(),
+                      username: req.user.tunnus,
+                      login: true, name: req.user.nimi
+                    });
+                  } else {
+                    res.status(404).json({error: 'CategoryNotFound'})
+                  }
                 });
               } else {
                 res.status(404).json({error: 'EventNotFound'})

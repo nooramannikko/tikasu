@@ -7,7 +7,7 @@
 -- Postitoimipaikka ei voi olla tyhjä
 DROP TABLE IF EXISTS POSTITOIMIPAIKKA;
 CREATE TABLE if not exists POSTITOIMIPAIKKA(
-    Postitoimipaikka VARCHAR(30) NOT NULL PRIMARY KEY
+    Postitoimipaikka VARCHAR(30) NOT NULL PRIMARY KEY CHECK(length(Postitoimipaikka)>0)
 );
 
 DROP TABLE IF EXISTS POSTINUMERO;

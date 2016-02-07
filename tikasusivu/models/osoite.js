@@ -20,4 +20,20 @@ var Osoite = Bookshelf.Model.extend({
   }
 });
 
+Osoite.upsert = function (data) {
+  return Osoite.where({
+    postiosoite: data.address,
+    postinumero: data.code
+  }).fetch().then(function(address){
+    if (!address){
+      return Osoite.forge().save({
+        postiosoite: data.address,
+        postinumero: data.code
+      }, {method: 'insert', transacting: data.transaction});
+    } else {
+      return Promise.resolve(address);
+    }
+  });
+};
+
 module.exports = Bookshelf.model('Osoite', Osoite);
