@@ -11,6 +11,7 @@ var Vastuuhenkilo = require('../models/vastuuhenkilo');
 var Kategoria = require('../models/kategoria');
 var Postinumero = require('../models/postinumero');
 var Postitoimipaikka = require('../models/postitoimipaikka');
+var Raportti = require('../models/raportti');
 
 function logout(req, res){
   req.logout();
@@ -292,7 +293,8 @@ router.get('/report', function(req,res) {
   if (req.user){
     Raportti.fetchAll().then(function (report) {
       if (report){
-        res.render('report', { data: report, login: true, name: req.user.nimi });
+        console.log(report.toJSON());
+        res.render('report', { data: report.toJSON(), login: true, name: req.user.nimi });
       } else {
         res.status(404).json({error: 'ReportNotFound'})
       }

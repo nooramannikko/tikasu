@@ -3,34 +3,32 @@ extends layout
 block content
     h1.
         #{title}
-    table(class="pure-table")
-        thead
-            tr
-                th
-                    span.
-                        Tapahtuma
-                th
-                    span.
-                        Alkuaika
-                th
-                    span.
-                        Loppuaika
-                th
-                    span.
-                        Kategoria
-                th
-                    span.
-                        Vastuuhenkilö
-                th
-                    span.
-                        Osoite
-                th
-                    span.
-                        Postinumero
-                th
-                    span.
-                        Alv
-        tbody
-            each report in data
 
-
+    each event in data
+        h3.
+            #{event.alkuaika} - #{event.nimi}
+        ul
+            li
+                span.
+                    Tapahtumatyyppi: #{event.kategoria}
+            li
+                span.
+                    Paikkakunta: #{event.postitoimipaikka}
+            li
+                span.
+                    Tapahtumapaikka: #{event.osoite}
+            li
+                span.
+                    Lipun veroton keskihinta: #{parseFloat(event.verotonkeskihinta).toFixed(2)} €
+            li
+                span.
+                    Yleisömäärä(maksaneita): #{event.yleisomaara}
+            li
+                span.
+                    Myynti veroton: #{parseFloat(event.myyntiveroton).toFixed(2)} €
+            li
+                span.
+                    ALV 10,00%: #{event.alvosuus.toFixed(2)} €
+            li
+                span.
+                    Myynti verollinen: #{event.myyntiverollinen.toFixed(2)} €
