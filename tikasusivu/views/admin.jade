@@ -40,42 +40,42 @@ block content
                 div.input
                     spin.label Nimi
                     div.textbox
-                        input(type="text", name="eventName")
+                        input(type="text", name="eventName", maxLength=50, required)
                 div.input
                     spin.label Alkuaika
                     div.textbox
-                        input(type="datetime-local", name="startTime" placeholder="HH:MM ddmmyyy")
+                        input(type="datetime-local", name="startTime", required)
                 div.input
                     spin.label Loppuaika
                     div.textbox
-                        input(type="datetime-local", name="endTime" placeholder="HH:MM ddmmyyy")
+                        input(type="datetime-local", name="endTime", required)
                 div.input
                     spin.label Osoite
                     div.textbox
-                        input(type="text", name="address")
+                        input(type="text", name="address", maxLength=100, required)
                 div.input
                     spin.label Postinumero
                     div.textbox
-                        input(type="text", name="postalCode")
+                        input(type="text", name="postalCode", maxLength=5, required)
                 div.input
                     spin.label Postitoimipaikka
                     div.textbox
-                        input(type="text", name="postalArea")
+                        input(type="text", name="postalArea", maxLength=30, required)
                 div.input
                     spin.label Kategoria
                     div.dropdown
-                        select(name="category")
+                        select(name="category", required)
                             option(value='')
                             each cat in categories
                                 option(selected=cat.id == 1, value=cat.id) #{cat.nimi}
                 div.input
                     spin.label ALV-%
                     div.textbox
-                        input(type="text", name="alv")
+                        input(type="text", name="alv", maxLength=3, required)
                 div.input
                     spin.label Vastuuhenkilö
                     div.dropdown
-                        select(name="vhlo")
+                        select(name="vhlo", required)
                             option(value='')
                             each vhlo in vhlos
                                 option(selected=vhlo.tunnus == username, value=vhlo.id) #{vhlo.tunnus}

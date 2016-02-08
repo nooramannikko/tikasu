@@ -140,44 +140,50 @@ router.post('/events', function(req,res){
     console.log("Creating new event:");
     console.log(req.body);
 
-    // Transaction that will either complete or rollback
-    // Postitoimipaikka, Postinumero and Osoite are inserted only if they don't exist already
-    Bookshelf.transaction(function(t) {
-      return Postitoimipaikka.upsert({
-        postalArea: req.body.postalArea,
-        transaction: t
-      }).then(function (area) {
-        return Postinumero.upsert({
-          postalCode: req.body.postalCode,
-          postalArea: area.attributes.postitoimipaikka,
+    // Check that startTime < endTime
+    if (req.body.startTime >= req.body.endTime) {
+      alert.setAlert("Loppuajan on oltava alkuajan jälkeen");
+      res.redirect('/admin');
+    } else {
+      // Transaction that will either complete or rollback
+      // Postitoimipaikka, Postinumero and Osoite are inserted only if they don't exist already
+      Bookshelf.transaction(function(t) {
+        return Postitoimipaikka.upsert({
+          postalArea: req.body.postalArea,
           transaction: t
-        });
-      }).then(function (code) {
-        return Osoite.upsert({
-          address: req.body.address,
-          code: code.attributes.postinumero,
-          transaction: t
-        });
-      }).then(function (address) {
-        return Tapahtuma.upsert({
-          eventName: req.body.eventName,
-          alv: req.body.alv,
-          startTime: req.body.startTime,
-          endTime: req.body.endTime,
-          vhlo: req.body.vhlo,
-          category: req.body.category,
-          addressId: address.attributes.id,
-          transaction: t
-        });
-      })
-    }).then(function () {
-      // Transaction complete, render page
-      msg.setMessage("Tapahtuma luotu");
-      res.redirect(req.get('referer'));
-    }).catch(function (){
-      alert.setAlert("Tallennuksessa tapahtui virhe");
-      res.redirect(req.get('referer'));
-    });
+        }).then(function (area) {
+          return Postinumero.upsert({
+            postalCode: req.body.postalCode,
+            postalArea: area.attributes.postitoimipaikka,
+            transaction: t
+          });
+        }).then(function (code) {
+          return Osoite.upsert({
+            address: req.body.address,
+            code: code.attributes.postinumero,
+            transaction: t
+          });
+        }).then(function (address) {
+          return Tapahtuma.upsert({
+            eventName: req.body.eventName,
+            alv: req.body.alv,
+            startTime: req.body.startTime,
+            endTime: req.body.endTime,
+            vhlo: req.body.vhlo,
+            category: req.body.category,
+            addressId: address.attributes.id,
+            transaction: t
+          });
+        })
+      }).then(function () {
+        // Transaction complete, render page
+        msg.setMessage("Tapahtuma luotu");
+        res.redirect(req.get('referer'));
+      }).catch(function (){
+        alert.setAlert("Tallennuksessa tapahtui virhe");
+        res.redirect(req.get('referer'));
+      });
+    }
   }
   else {
     res.render('login', { alertmsg: "Ole hyvä ja kirjaudu sisään", login: false});
@@ -241,47 +247,56 @@ router.post('/saveEvent/:id', function(req, res) {
     console.log(req.user);
     console.log(req.body);
     var id = req.params['id'];
-    // Transaction that will either complete or rollback
-    // Postitoimipaikka, Postinumero and Osoite are inserted only if they don't exist already
-    Bookshelf.transaction(function(t) {
-      return Postitoimipaikka.upsert({
-        postalArea: req.body.postalArea,
-        transaction: t
-      }).then(function (area) {
-        return Postinumero.upsert({
-          postalCode: req.body.postalCode,
-          postalArea: area.attributes.postitoimipaikka,
-          transaction: t
-        });
-      }).then(function (code) {
-        return Osoite.upsert({
-          address: req.body.address,
-          code: code.attributes.postinumero,
-          transaction: t
-        });
-      }).then(function (address) {
-        return Tapahtuma.upsert({
-          id: id,
-          eventName: req.body.eventName,
-          alv: req.body.alv,
-          startTime: req.body.startTime,
-          endTime: req.body.endTime,
-          vhlo: req.user.id,
-          category: req.body.category,
-          addressId: address.attributes.id,
-          transaction: t
-        });
-      })
-    }).then(function () {
-      // Transaction complete, render page
-      console.log("kukkuu1");
-      msg.setMessage("Tapahtuma muokattu");
-      console.log("kukkuu2");
+
+    // Check that startTime < endTime
+    console.log(req.body.startTime >= req.body.endTime);
+    if (req.body.startTime >= req.body.endTime) {
+      console.log("Väärä aika");
+      alert.setAlert("Loppuajan on oltava alkuajan jälkeen");
       res.redirect('../admin');
-    }).catch(function (){
-      alert.setAlert("Muokkauksessa tapahtui virhe");
-      res.redirect('../admin');
-    });
+    } else {
+      // Transaction that will either complete or rollback
+      // Postitoimipaikka, Postinumero and Osoite are inserted only if they don't exist already
+      Bookshelf.transaction(function(t) {
+        return Postitoimipaikka.upsert({
+          postalArea: req.body.postalArea,
+          transaction: t
+        }).then(function (area) {
+          return Postinumero.upsert({
+            postalCode: req.body.postalCode,
+            postalArea: area.attributes.postitoimipaikka,
+            transaction: t
+          });
+        }).then(function (code) {
+          return Osoite.upsert({
+            address: req.body.address,
+            code: code.attributes.postinumero,
+            transaction: t
+          });
+        }).then(function (address) {
+          return Tapahtuma.upsert({
+            id: id,
+            eventName: req.body.eventName,
+            alv: req.body.alv,
+            startTime: req.body.startTime,
+            endTime: req.body.endTime,
+            vhlo: req.user.id,
+            category: req.body.category,
+            addressId: address.attributes.id,
+            transaction: t
+          });
+        })
+      }).then(function () {
+        // Transaction complete, render page
+        console.log("kukkuu1");
+        msg.setMessage("Tapahtuma muokattu");
+        console.log("kukkuu2");
+        res.redirect('../admin');
+      }).catch(function (){
+        alert.setAlert("Muokkauksessa tapahtui virhe");
+        res.redirect('../admin');
+      });
+    }
   } else {
     res.render('login', { alertmsg: "Ole hyvä ja kirjaudu sisään", login: false});
   }
