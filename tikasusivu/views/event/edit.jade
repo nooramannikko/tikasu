@@ -23,7 +23,7 @@ block content
         div.input
                 spin.label Postinumero
                 div.textbox
-                    input(type="text", name="postalCode", value=event.osoite.postinumero.postinumero, maxLength=5, required)
+                    input(type="text", name="postalCode", value=event.osoite.postinumero.postinumero, maxLength=5, required, pattern="[0-9]{5}", title="Syötä viisinumeroinen postinumero")
         div.input
             spin.label Postitoimipaikka
             div.textbox
@@ -38,7 +38,7 @@ block content
         div.input
             spin.label ALV-%
             div.textbox
-                input(type="text", name="alv", value=event.alv, maxLength=3, required)
+                input(type="text", name="alv", value=event.alv, maxLength=3, required, pattern="[0-9]{1,2}", title="Syötä alv prosenttilukuna 0-99")
         div.input
             spin.label Vastuuhenkilö
             div.textbox

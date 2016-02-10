@@ -386,24 +386,31 @@ router.get('/report', function(req,res) {
 
     // Filter reports conditionally
     // This could probably be done in nicer way with lodash filter
-    var reportQuery = Raportti.where({vastuuhenkilo: req.user.id});
-    req.query.category ? reportQuery = reportQuery.where('kategoriaid', parseInt(req.query.category)) : null;
-    req.query.startTime ? reportQuery = reportQuery.where('alkuaika', '>=', req.query.startTime) : null;
-    req.query.endTime ? reportQuery = reportQuery.where('loppuaika', '<=', req.query.endTime) : null;
-    reportQuery.fetchAll().then(function (report) {
-      if (report && report.toJSON().length != 0){
-        res.render('report', { data: report.toJSON(), login: true, name: req.user.nimi });
-      } else {
-        msg.setMessage("Haulla ei löytynyt raportteja");
-        res.redirect('admin');
-      }
-    }).catch(function(err){
-      console.error(err);
-      res.status(500).json({error: err});
-    });
-  } else {
-    res.render('login', { alertmsg: "Ole hyvä ja kirjaudu sisään", login: false});
-  }
+    if (req.query.startTime >= req.query.endTime) {
+      console.log("Väärä aika");
+      alert.setAlert("Loppuajan on oltava alkuajan jälkeen");
+      res.redirect('../admin');
+    } else {
+
+      var reportQuery = Raportti.where({vastuuhenkilo: req.user.id});
+      req.query.category ? reportQuery = reportQuery.where('kategoriaid', parseInt(req.query.category)) : null;
+      req.query.startTime ? reportQuery = reportQuery.where('alkuaika', '>=', req.query.startTime) : null;
+      req.query.endTime ? reportQuery = reportQuery.where('loppuaika', '<=', req.query.endTime) : null;
+      reportQuery.fetchAll().then(function (report) {
+        if (report && report.toJSON().length != 0){
+          res.render('report', { data: report.toJSON(), login: true, name: req.user.nimi });
+        } else {
+          msg.setMessage("Haulla ei löytynyt raportteja");
+          res.redirect('admin');
+        }
+      }).catch(function(err){
+        console.error(err);
+        res.status(500).json({error: err});
+      });
+    }
+    } else {
+      res.render('login', { alertmsg: "Ole hyvä ja kirjaudu sisään", login: false});
+    }
 });
 
 module.exports = router;
