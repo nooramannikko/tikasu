@@ -9,7 +9,7 @@ var Tapahtumanjarjestaja = require('../models/tapahtumanjarjestaja');
 var Raportti = require('../models/raportti');
 
 router.get('/', auth.check, function(req, res, next) {
-  res.send("Tässä api dokumentaatio ehkä mahollisesti");
+  res.send("Tässä api dokumentaatio ehkä mahollisesti - deprecated");
 });
 
 router.get('/tapahtumat', auth.check, function(req,res,next) {

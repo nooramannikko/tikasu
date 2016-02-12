@@ -179,7 +179,9 @@ router.post('/events', function(req,res){
         // Transaction complete, render page
         msg.setMessage("Tapahtuma luotu");
         res.redirect(req.get('referer'));
-      }).catch(function (){
+      }).catch(function (err){
+        console.error("An error happened");
+        console.error(err);
         alert.setAlert("Tallennuksessa tapahtui virhe");
         res.redirect(req.get('referer'));
       });

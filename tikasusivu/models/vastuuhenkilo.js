@@ -4,7 +4,8 @@ var Bookshelf = require('../database');
 
 require('./tapahtumanjarjestaja');
 var Vastuuhenkilo = Bookshelf.Model.extend({
-  tableName: 'vastuuhenkilo',
+  // Vastuuhenkilo with limited access to only users who belong to organizer tapahtumalaarnio
+  tableName: 'tapahtumalaarnio_vastuuhenkilo',
 
   tapahtumanjarjestaja: function() {
     return this.belongsTo('Tapahtumanjarjestaja', 'tapahtumanjarjestaja');

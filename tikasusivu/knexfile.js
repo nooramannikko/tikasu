@@ -8,8 +8,8 @@ module.exports = {
     connection: {
       host     : '128.199.57.8',
       port     : '5432',
-      user     : 'admin',
-      password : 'jee',
+      user     : 'vastuuhenkilo',
+      password : '430VJMY42%4r',
       database : 'LippuLasse'
     }
   },
@@ -19,8 +19,8 @@ module.exports = {
     connection: {
       host     : '128.199.57.8',
       port     : '5432',
-      user     : 'admin',
-      password : 'jee',
+      user     : 'vastuuhenkilo',
+      password : '430VJMY42%4r',
       database : 'LippuLasse'
     }
   }
