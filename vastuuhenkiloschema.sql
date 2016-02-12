@@ -7,20 +7,20 @@ GRANT USAGE ON SCHEMA vastuuhenkilo_rajattu TO vastuuhenkilo;
 
 -- Vastuuhenkilo needs all basic CRUD operations on TAPAHTUMA
 GRANT SELECT, INSERT, UPDATE, DELETE ON TAPAHTUMA TO vastuuhenkilo;
-GRANT SELECT, INSERT, UPDATE, DELETE ON SEQUENCE tapahtuma_id_seq TO vastuuhenkilo;
+GRANT USAGE, SELECT ON SEQUENCE tapahtuma_id_seq TO vastuuhenkilo;
 
 -- Vastuuhenkilo also needs all basic CRUD operations on KATSOMO and KATSOMOPAIKKA
 GRANT SELECT, INSERT, UPDATE, DELETE ON KATSOMO TO vastuuhenkilo;
 -- Also grant permissions to sequences (auto increment pks)
-GRANT SELECT, INSERT, UPDATE, DELETE ON SEQUENCE katsomo_id_seq TO vastuuhenkilo;
+GRANT USAGE, SELECT ON SEQUENCE katsomo_id_seq TO vastuuhenkilo;
 GRANT SELECT, INSERT, UPDATE, DELETE ON KATSOMOPAIKKA TO vastuuhenkilo;
-GRANT SELECT, INSERT, UPDATE, DELETE ON SEQUENCE katsomopaikka_id_seq TO vastuuhenkilo;
+GRANT USAGE, SELECT ON SEQUENCE katsomopaikka_id_seq TO vastuuhenkilo;
 GRANT SELECT, INSERT, UPDATE, DELETE ON TAPAHTUMAKATSOMO TO vastuuhenkilo;
 
 -- For special ticket price offer management (if this is vastuuhenkilos job) vastuuhenkilo also needs
 -- basic CRUD on related tables
 GRANT SELECT, INSERT, UPDATE, DELETE ON HINTATARJOUS TO vastuuhenkilo;
-GRANT SELECT, INSERT, UPDATE, DELETE ON SEQUENCE hintatarjous_id_seq TO vastuuhenkilo;
+GRANT USAGE, SELECT ON SEQUENCE hintatarjous_id_seq TO vastuuhenkilo;
 GRANT SELECT, INSERT, UPDATE, DELETE ON HINTATARJOUSLIPPU TO vastuuhenkilo;
 
 -- In this exercise vastuuhenkilo also needs select (and crud) on following tables
@@ -28,7 +28,7 @@ GRANT SELECT ON LIPPU TO vastuuhenkilo;
 GRANT SELECT ON KATEGORIA TO vastuuhenkilo;
 GRANT SELECT, INSERT, UPDATE, DELETE ON OSOITE TO vastuuhenkilo;
 -- Also grant permissions to sequences (auto increment pks)
-GRANT SELECT, INSERT, UPDATE, DELETE ON SEQUENCE osoite_id_seq TO vastuuhenkilo;
+GRANT USAGE, SELECT ON SEQUENCE osoite_id_seq TO vastuuhenkilo;
 GRANT SELECT, INSERT, UPDATE, DELETE ON POSTINUMERO TO vastuuhenkilo;
 GRANT SELECT, INSERT, UPDATE, DELETE ON POSTITOIMIPAIKKA TO vastuuhenkilo;
 
