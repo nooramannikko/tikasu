@@ -8,10 +8,11 @@ passport.use(new BasicStrategy(
   function(username, password, done) {
     Vastuuhenkilo.where({tunnus: username}).fetch().then(function(user){
       if (user) {
-        bcrypt.compare(password, user.password, function(err, res) {
+        bcrypt.compare(password, user.attributes.salasana, function(err, res) {
           if (!err && res === true){
             return done(null, user);
           } else {
+            console.log("Login for user " + username + " failed!");
             // password didnt match
             return done(null, false);
           }
@@ -28,10 +29,11 @@ passport.use(new LocalStrategy(
   function(username, password, done) {
     Vastuuhenkilo.where({tunnus: username}).fetch().then(function(user){
       if (user) {
-        bcrypt.compare(password, user.password, function(err, res) {
+        bcrypt.compare(password, user.attributes.salasana, function(err, res) {
           if (!err && res === true){
             return done(null, user);
           } else {
+            console.log("Login for user " + username + " failed!");
             // password didnt match
             return done(null, false);
           }
