@@ -2,33 +2,44 @@ var Vastuuhenkilo = require('./models/vastuuhenkilo');
 var passport = require('passport');
 var BasicStrategy = require('passport-http').BasicStrategy;
 var LocalStrategy = require('passport-local').Strategy;
+var bcrypt = require('bcrypt');
 
 passport.use(new BasicStrategy(
   function(username, password, done) {
-    Vastuuhenkilo.where({tunnus: username, salasana: password}).fetch().then(function(user){
-        if (user)
-        {
+    Vastuuhenkilo.where({tunnus: username}).fetch().then(function(user){
+      if (user) {
+        bcrypt.compare(password, user.password, function(err, res) {
+          if (!err && res === true){
             return done(null, user);
-        }
-        else
-        {
+          } else {
+            // password didnt match
             return done(null, false);
-        }
+          }
+        });
+      } else {
+        // user did not exist
+        return done(null, false);
+      }
     });
   }
 ));
 
 passport.use(new LocalStrategy( 
   function(username, password, done) {
-    Vastuuhenkilo.where({tunnus: username, salasana: password}).fetch().then(function(user){
-        if (user)
-        {
+    Vastuuhenkilo.where({tunnus: username}).fetch().then(function(user){
+      if (user) {
+        bcrypt.compare(password, user.password, function(err, res) {
+          if (!err && res === true){
             return done(null, user);
-        }
-        else
-        {
+          } else {
+            // password didnt match
             return done(null, false);
-        }
+          }
+        });
+      } else {
+        // user did not exist
+        return done(null, false);
+      }
     });
   }
 ));
