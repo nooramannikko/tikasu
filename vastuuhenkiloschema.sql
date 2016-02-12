@@ -47,11 +47,11 @@ SELECT
 	OSOITE.Postiosoite,
 	POSTINUMERO.Postinumero,
 	POSTINUMERO.Postitoimipaikka,
-	AVG(LIPPU.HINTA) AS VerotonKeskihinta,
+	COALESCE(AVG(LIPPU.HINTA), 0) AS VerotonKeskihinta,
 	COUNT(LIPPU) AS Yleisomaara,
-	SUM(LIPPU.HINTA) AS MyyntiVeroton,
-	(TAPAHTUMA.Alv::float / 100::float) * (SUM(LIPPU.HINTA)::float) AS ALVOsuus,
-	(1 + (TAPAHTUMA.Alv::float / 100::float)) * (SUM(LIPPU.HINTA)::float) AS MyyntiVerollinen 
+	COALESCE(SUM(LIPPU.HINTA), 0) AS MyyntiVeroton,
+	COALESCE((TAPAHTUMA.Alv::float / 100::float) * (SUM(LIPPU.HINTA)::float), 0) AS ALVOsuus,
+	COALESCE((1 + (TAPAHTUMA.Alv::float / 100::float)) * (SUM(LIPPU.HINTA)::float, 0) AS MyyntiVerollinen 
 FROM TAPAHTUMA
 	LEFT OUTER JOIN LIPPU ON (
 		TAPAHTUMA.Id = LIPPU.Tapahtuma AND
