@@ -51,7 +51,7 @@ SELECT
 	COUNT(LIPPU) AS Yleisomaara,
 	COALESCE(SUM(LIPPU.HINTA), 0) AS MyyntiVeroton,
 	COALESCE((TAPAHTUMA.Alv::float / 100::float) * (SUM(LIPPU.HINTA)::float), 0) AS ALVOsuus,
-	COALESCE((1 + (TAPAHTUMA.Alv::float / 100::float)) * (SUM(LIPPU.HINTA)::float, 0) AS MyyntiVerollinen 
+	COALESCE((1 + (TAPAHTUMA.Alv::float / 100::float)) * (SUM(LIPPU.HINTA)::float), 0) AS MyyntiVerollinen 
 FROM TAPAHTUMA
 	LEFT OUTER JOIN LIPPU ON (
 		TAPAHTUMA.Id = LIPPU.Tapahtuma AND
