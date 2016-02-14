@@ -34,12 +34,12 @@ INSERT INTO TAPAHTUMA (Nimi, Kategoria, Alv, Alkuaika, Loppuaika, Osoiteid, Vast
 VALUES('Tanssiesitys', 3, 8,  '2016-02-19 10:23:06', '2016-02-19 15:20:03', 3, 2);
 
 -- Katsomot
-INSERT INTO KATSOMO (Nimi) VALUES('hartwallareena');
+INSERT INTO KATSOMO (Nimi) VALUES('istumakatsomo');
 INSERT INTO KATSOMO (Nimi) VALUES('seisomakatsomo');
 
 -- Tapahtumien ja katsomoiden väliset suhteet
-INSERT INTO TAPAHTUMAKATSOMO VALUES(1, 2);
-INSERT INTO TAPAHTUMAKATSOMO VALUES(2, 1);
+INSERT INTO TAPAHTUMAKATSOMO (TapahtumaId, KatsomoId) VALUES(1, 2);
+INSERT INTO TAPAHTUMAKATSOMO (TapahtumaId, KatsomoId) VALUES(2, 1);
 
 -- Hartwall areenan paikkoja
 -- Id, rivi, paikka, katsomoId

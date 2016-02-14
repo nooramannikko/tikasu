@@ -17,6 +17,14 @@ var Tapahtuma = Bookshelf.Model.extend({
 
   vastuuhenkilo: function() {
     return this.belongsTo('Vastuuhenkilo', 'vastuuhenkilo')
+  },
+
+  tapahtumakatsomo: function() {
+    return this.hasMany('Tapahtumakatsomo', 'tapahtumaid');
+  },
+
+  katsomo: function() {
+    return this.hasMany('Katsomo').through('Tapahtumakatsomo', 'tapahtumaid');
   }
 
 });

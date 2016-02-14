@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 var passport = require('passport');
 var moment = require('moment');
+
 var Bookshelf = require('../database');
 var Lippu = require('../models/lippu');
 var Tapahtuma = require('../models/tapahtuma');
@@ -11,6 +12,8 @@ var Kategoria = require('../models/kategoria');
 var Postinumero = require('../models/postinumero');
 var Postitoimipaikka = require('../models/postitoimipaikka');
 var Raportti = require('../models/raportti');
+var Katsomo = require('../models/katsomo');
+var Tapahtumakatsomo = require('../models/tapahtumakatsomo');
 
 var msg;
 function messageBox () {
@@ -95,7 +98,7 @@ router.get('/login', function(req,res) {
 /* GET event listing */
 router.get('/events', function(req, res){
   if(req.user) {
-    Tapahtuma.fetchAll({withRelated: ['kategoria', 'osoite', 'vastuuhenkilo']}).then(function (events) {
+    Tapahtuma.fetchAll({withRelated: ['kategoria', 'osoite', 'vastuuhenkilo', 'katsomo']}).then(function (events) {
       if (events){
         var eventsJson = events.toJSON();
         console.log(eventsJson);
@@ -174,7 +177,7 @@ router.post('/events', function(req,res){
             addressId: address.attributes.id,
             transaction: t
           });
-        })
+        });
       }).then(function () {
         // Transaction complete, render page
         msg.setMessage("Tapahtuma luotu");
