@@ -19,9 +19,9 @@ INSERT INTO SIHTEERIJARJESTAJA VALUES('sihteeri', 1);
 INSERT INTO SIHTEERIJARJESTAJA VALUES('sihteeri', 2);
 
 INSERT INTO VASTUUHENKILO (Tunnus, Salasana, Nimi, Puhelin, Email, Osoite, Tapahtumanjarjestaja, Sihteeri)
-VALUES('laarniotar', '$2a$16$MEnG1t4wtH0qeYRmDI9N4u1x8QmBumlEB0PqBx6bVc/qOzZAxDzma', 'Vastuu Henkilo', '04011122244', 'vastuu@henkilo.fi', 2, 1, 'sihteeri');
+VALUES('laarniotar', '$2a$08$zZV0IqybmezUHXe.g4hMdOv/C1JKACAdnu1jwoAXtvUZMajwlQZsC', 'Vastuu Henkilo', '04011122244', 'vastuu@henkilo.fi', 2, 1, 'sihteeri');
 INSERT INTO VASTUUHENKILO (Tunnus, Salasana, Nimi, Puhelin, Email, Osoite, Tapahtumanjarjestaja, Sihteeri)
-VALUES('lasselaarnio', '$2a$16$IO4lBcVFld08O.wUTAETDOUFH804fDtXaiYgNUionOipEin.0sch2', 'Lasse Laarnio', '0501325355', 'lasse@laarnio.fi', 3, 1, 'sihteeri');
+VALUES('lasselaarnio', '$2a$08$N3eELZHiKP.F4oxz83c5i.D5IWwOlDxEpvwQqlQkIJSV.XRyANDfy', 'Lasse Laarnio', '0501325355', 'lasse@laarnio.fi', 3, 1, 'sihteeri');
 
 INSERT INTO KATEGORIA (Nimi) VALUES('konsertti');
 INSERT INTO KATEGORIA (Nimi) VALUES('tanssi');
