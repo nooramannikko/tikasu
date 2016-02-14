@@ -16,6 +16,7 @@ GRANT USAGE, SELECT ON SEQUENCE katsomo_id_seq TO vastuuhenkilo;
 GRANT SELECT, INSERT, UPDATE, DELETE ON KATSOMOPAIKKA TO vastuuhenkilo;
 GRANT USAGE, SELECT ON SEQUENCE katsomopaikka_id_seq TO vastuuhenkilo;
 GRANT SELECT, INSERT, UPDATE, DELETE ON TAPAHTUMAKATSOMO TO vastuuhenkilo;
+GRANT USAGE, SELECT ON SEQUENCE tapahtumakatsomo_id_seq TO vastuuhenkilo;
 
 -- For special ticket price offer management (if this is vastuuhenkilos job) vastuuhenkilo also needs
 -- basic CRUD on related tables

@@ -21,10 +21,6 @@ var Tapahtuma = Bookshelf.Model.extend({
 
   tapahtumakatsomo: function() {
     return this.hasMany('Tapahtumakatsomo', 'tapahtumaid');
-  },
-
-  katsomo: function() {
-    return this.hasMany('Katsomo', 'katsomoid').through('Tapahtumakatsomo', 'id');
   }
 
 });
@@ -57,6 +53,6 @@ Tapahtuma.upsert = function (data) {
       }, {method: 'update', transacting: data.transaction});
     }
   });
-}
+};
 
 module.exports = Bookshelf.model('Tapahtuma', Tapahtuma);

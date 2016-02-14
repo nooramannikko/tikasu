@@ -69,6 +69,13 @@ block content
                             each cat in categories
                                 option(selected=cat.id == 1, value=cat.id) #{cat.nimi}
                 div.input
+                    spin.label Katsomo
+                    div.dropdown
+                        select(name="stand", required)
+                            option(value='')
+                            each stand in stands
+                                option(selected=stand.id == 1, value=stand.id) #{stand.nimi}
+                div.input
                     spin.label ALV-%
                     div.textbox
                         input(type="text", name="alv", maxLength=3, required, pattern="[0-9]{1,2}", title="Syötä alv prosenttilukuna 0-99")
@@ -126,6 +133,9 @@ block content
                                 Kategoria
                         th
                             span.
+                                Katsomo
+                        th
+                            span.
                                 Osoite
                         th
                             span.
@@ -151,6 +161,9 @@ block content
                             td
                                 span.
                                     #{event.kategoria}
+                            td
+                                span.
+                                    #{event.katsomo}
                             td
                                 span.
                                     #{event.osoite}

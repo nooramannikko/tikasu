@@ -98,16 +98,15 @@ router.get('/login', function(req,res) {
 /* GET event listing */
 router.get('/events', function(req, res){
   if(req.user) {
-    Tapahtuma.fetchAll({withRelated: ['kategoria', 'osoite', 'vastuuhenkilo', 'katsomo']}).then(function (events) {
+    Tapahtuma.fetchAll({withRelated: ['kategoria', 'osoite', 'vastuuhenkilo', 'tapahtumakatsomo.katsomo']}).then(function (events) {
       if (events){
         var eventsJson = events.toJSON();
-        console.log(eventsJson);
+        console.log(JSON.stringify(eventsJson, null, 2));
 
         // Get tickets for events
         var eventList = [];
 
         eventsJson.map(function(event) {
-          var alvToimiNyt = event.alv;
           eventList.push({
               id: event.id,
               nimi: event.nimi,
@@ -116,12 +115,12 @@ router.get('/events', function(req, res){
               osoite: event.osoite.postiosoite + ', ' + event.osoite.postinumero,
               vastuuhenkilo: event.vastuuhenkilo.nimi,
               kategoria: event.kategoria.nimi,
-              alv: alvToimiNyt
+              alv: event.alv,
+              katsomo: event.tapahtumakatsomo[0].katsomo.nimi
           });
         });
         console.log("categories time");
         res.render('event/index', {events: eventList, login: true, name: req.user.nimi});
-
       } else {
         res.render('event/index', {events: {}, login: true, name: req.user.nimi, notice: "Tapahtumia ei löytynyt"});
       }
@@ -176,6 +175,11 @@ router.post('/events', function(req,res){
             category: req.body.category,
             addressId: address.attributes.id,
             transaction: t
+          }).then(function (event) {
+            return Tapahtumakatsomo.forge({
+              tapahtumaid: event.attributes.id,
+              katsomoid: parseInt(req.body.stand)
+            }).save(null, {method: 'insert', transacting: t});
           });
         });
       }).then(function () {
@@ -222,13 +226,19 @@ router.get('/editEvent/:id', function(req,res){
   console.log("edit");
   if (req.user){
     var id = req.params['id'];
-    Tapahtuma.where({id: id}).fetch({withRelated: ['kategoria', 'osoite', 'osoite.postinumero']}).then(function (event) {
+    Tapahtuma.where({id: id}).fetch({withRelated: ['kategoria', 'osoite', 'osoite.postinumero', 'tapahtumakatsomo.katsomo']}).then(function (event) {
       if (event){
         var startTime = moment(event.attributes.alkuaika).format("YYYY-MM-DDTHH:mm");
         var endTime = moment(event.attributes.loppuaika).format("YYYY-MM-DDTHH:mm");
         Kategoria.fetchAll().then(function (categories) {
           if (categories) {
-            res.render('event/edit', {event: event.toJSON(), categories: categories.toJSON(), username: req.user.tunnus, userid: req.user.id, startTime: startTime, endTime: endTime, login: true, name: req.user.nimi});
+            Katsomo.fetchAll().then(function (stands) {
+              if (stands) {
+                res.render('event/edit', {event: event.toJSON(), categories: categories.toJSON(), stands: stands.toJSON(), username: req.user.tunnus, userid: req.user.id, startTime: startTime, endTime: endTime, login: true, name: req.user.nimi});
+              } else {
+                res.status(404).json({error: 'StandNotFound'})
+              }
+            });
           } else {
             res.status(404).json({error: 'CategoryNotFound'})
           }
@@ -244,7 +254,7 @@ router.get('/editEvent/:id', function(req,res){
   }
 });
 
-
+/*POST saveEvent*/
 router.post('/saveEvent/:id', function(req, res) {
   if(req.user) {
 
@@ -290,14 +300,17 @@ router.post('/saveEvent/:id', function(req, res) {
             addressId: address.attributes.id,
             transaction: t
           });
+        }).then(function () {
+          return Tapahtumakatsomo.forge({tapahtumaid: parseInt(id)}).fetch().then(function(tk) {
+            return tk.save({katsomoid: parseInt(req.body.stand)}, {method: 'update', transacting: t, patch: true});
+          })
         })
       }).then(function () {
         // Transaction complete, render page
-        console.log("kukkuu1");
         msg.setMessage("Tapahtuma muokattu");
-        console.log("kukkuu2");
         res.redirect('../admin');
-      }).catch(function (){
+      }).catch(function (err){
+        console.log(err);
         alert.setAlert("Muokkauksessa tapahtui virhe");
         res.redirect('../admin');
       });
@@ -321,7 +334,7 @@ router.get('/admin', function(req,res) {
             vhlos.forEach(function(hlo) {
               vhloIds.push(hlo.attributes.id)
             });
-            Tapahtuma.where('vastuuhenkilo', 'IN', vhloIds).fetchAll({withRelated: ['kategoria', 'osoite']}).then(function (events) {
+            Tapahtuma.where('vastuuhenkilo', 'IN', vhloIds).fetchAll({withRelated: ['kategoria', 'osoite', 'tapahtumakatsomo.katsomo']}).then(function (events) {
               if (events){
                 var eventsJson = events.toJSON();
                 console.log(eventsJson);
@@ -338,6 +351,7 @@ router.get('/admin', function(req,res) {
                       loppuaika: moment(event.loppuaika).format("DD.MM.YYYY HH:mm"),
                       osoite: event.osoite.postiosoite + ', ' + event.osoite.postinumero,
                       kategoria: event.kategoria.nimi,
+                      katsomo: event.tapahtumakatsomo[0].katsomo.nimi,
                       liput: tickets.length
                     });
                     console.log("pushing event");
@@ -347,15 +361,23 @@ router.get('/admin', function(req,res) {
                   console.log("categories time");
                   Kategoria.fetchAll().then(function (categories) {
                     if (categories){
-                      res.render('admin', {
-                        data: vhlo.toJSON(),
-                        events: eventList,
-                        categories: categories.toJSON(),
-                        vhlos: vhlos.toJSON(),
-                        username: req.user.tunnus,
-                        login: true, name: req.user.nimi,
-                        notice: msg.isRead() ? null : msg.getMessage(),
-                        alertmsg: alert.isRead() ? null : alert.getAlert()
+                      Katsomo.fetchAll().then(function (stands) {
+                        if (stands) {
+                          console.log(stands.toJSON());
+                          res.render('admin', {
+                            data: vhlo.toJSON(),
+                            events: eventList,
+                            categories: categories.toJSON(),
+                            stands: stands.toJSON(),
+                            vhlos: vhlos.toJSON(),
+                            username: req.user.tunnus,
+                            login: true, name: req.user.nimi,
+                            notice: msg.isRead() ? null : msg.getMessage(),
+                            alertmsg: alert.isRead() ? null : alert.getAlert()
+                          });
+                        } else {
+                          res.status(404).json({error: 'StandNotFound'})
+                        }
                       });
                     } else {
                       res.status(404).json({error: 'CategoryNotFound'})

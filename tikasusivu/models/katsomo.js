@@ -8,11 +8,8 @@ var Katsomo = Bookshelf.Model.extend({
 
   tapahtumakatsomo: function() {
     return this.hasMany('Tapahtumakatsomo', 'katsomoid');
-  },
-
-  tapahtuma: function() {
-    return this.hasMany('Tapahtuma').through('Tapahtumakatsomo', 'katsomoid');
   }
+
 });
 
 module.exports = Bookshelf.model('Katsomo', Katsomo);
