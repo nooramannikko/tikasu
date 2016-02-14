@@ -24,7 +24,7 @@ var Tapahtuma = Bookshelf.Model.extend({
   },
 
   katsomo: function() {
-    return this.hasMany('Katsomo').through('Tapahtumakatsomo', 'tapahtumaid');
+    return this.hasMany('Katsomo', 'katsomoid').through('Tapahtumakatsomo', 'id');
   }
 
 });
